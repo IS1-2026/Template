@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administrador | GolAhora</title>
+
+  <link rel="stylesheet" href="./css/Admin/admin.css">
+</head>
+
+<body>
+
+  <div class="dashboard">
+
+    <aside class="sidebar">
+      <h2>Gol<span>Ahora</span></h2>
+
+      <nav>
+        <a href="#"> Dashboard</a>
+        <a href="#"> Canchas</a>
+        <a href="#"> Reservas</a>
+        <a href="#"> Usuarios</a>
+        <a href="#"> Reportes</a>
+        <a href="#"> Configuración</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <h1>Panel de Administración</h1>
+        <div class="user">👤 Admin</div>
+      </header>
+
+      <section class="stats">
+        <div class="card">
+          <h3>Reservas hoy</h3>
+          <p>24</p>
+        </div>
+
+        <div class="card">
+          <h3>Canchas activas</h3>
+          <p>12</p>
+        </div>
+
+        <div class="card">
+          <h3>Usuarios</h3>
+          <p>320</p>
+        </div>
+
+        <div class="card">
+          <h3>Ingresos</h3>
+          <p>$45.000</p>
+        </div>
+      </section>
+
+      <section class="table-section">
+        <h2>Últimas reservas</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Cancha</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Juan Pérez</td>
+              <td>Cancha 1</td>
+              <td>20/05</td>
+              <td class="ok">Confirmada</td>
+            </tr>
+
+            <tr>
+              <td>2</td>
+              <td>María López</td>
+              <td>Cancha 2</td>
+              <td>21/05</td>
+              <td class="pending">Pendiente</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+</body>
+</html>

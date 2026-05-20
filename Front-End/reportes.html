@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reportes - Gol Ahora</title>
+  <link rel="stylesheet" href="./css/style.css"/>
+  <link rel="stylesheet" href="./css/reportes.css"/>
+  <script defer src="./js/Reportes/reportes.js"></script>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="logo">GOL<span>AHORA</span></a>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="reportes.html" class="active">Reportes</a></li>
+    </ul>
+    <a href="login.html" class="btn">Cerrar sesión</a>
+  </nav>
+
+  <div class="container">
+
+    <div class="page-header">
+      <h1>Dashboard de <span>Reportes</span></h1>
+      <p>Generá y consultá reportes de ingresos, asistencia y reservas</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="accent accent-verde"></div>
+        <div class="stat-label">Total Ingresos</div>
+        <div class="stat-value" id="totalIngresos">0</div>
+        <div class="stat-sub">reportes generados</div>
+      </div>
+      <div class="stat-card">
+        <div class="accent accent-amarillo"></div>
+        <div class="stat-label">Total Asistencia</div>
+        <div class="stat-value" id="totalAsistencia">0</div>
+        <div class="stat-sub">reportes generados</div>
+      </div>
+      <div class="stat-card">
+        <div class="accent accent-azul"></div>
+        <div class="stat-label">Total Reservas</div>
+        <div class="stat-value" id="totalReservas">0</div>
+        <div class="stat-sub">reportes generados</div>
+      </div>
+      <div class="stat-card">
+        <div class="accent accent-verde"></div>
+        <div class="stat-label">Total Reportes</div>
+        <div class="stat-value" id="totalReportes">0</div>
+        <div class="stat-sub">en el sistema</div>
+      </div>
+    </div>
+
+    <!-- GENERAR REPORTE -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>📊 Generar nuevo reporte</h2>
+      </div>
+      <div class="panel-body">
+        <div class="generar-form">
+          <div class="form-group">
+            <label for="tipoReporte">Tipo de reporte</label>
+            <select id="tipoReporte">
+              <option value="">Seleccioná un tipo</option>
+              <option value="Ingresos">Ingresos</option>
+              <option value="Asistencia">Asistencia</option>
+              <option value="Reservas">Reservas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fechaReporte">Fecha de emisión</label>
+            <input type="date" id="fechaReporte"/>
+          </div>
+          <button class="btn-generar" onclick="generarReporte()">Generar reporte</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTADO -->
+    <div class="panel">
+      <div class="panel-header">
+        <h2>📋 Historial de reportes</h2>
+        <div style="display:flex; gap:0.8rem; align-items:center;">
+          <select id="filtroTipo" class="filtro-select" onchange="filtrarReportes()">
+            <option value="">Todos los tipos</option>
+            <option value="Ingresos">Ingresos</option>
+            <option value="Asistencia">Asistencia</option>
+            <option value="Reservas">Reservas</option>
+          </select>
+        </div>
+      </div>
+      <div class="panel-body" style="padding:0;">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Tipo de reporte</th>
+              <th>Fecha de emisión</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaReportes">
+            <tr>
+              <td colspan="4" class="empty">No hay reportes generados aún.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2026 <span>Gol Ahora</span> · El Buen Deporte · Grupo 3 - IS1</p>
+  </footer>
+
+</body>
+</html>

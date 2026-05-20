@@ -1,0 +1,222 @@
+/* reportes.css - estilos específicos de la página de reportes */
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  flex: 1;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  animation: fadeDown 0.4s ease both;
+}
+
+.page-header h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  letter-spacing: 2px;
+}
+
+.page-header h1 span { color: var(--verde); }
+
+.page-header p { color: var(--texto-suave); margin-top: 0.3rem; }
+
+/* STATS */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+  animation: fadeDown 0.4s ease 0.1s both;
+}
+
+.stat-card {
+  background: var(--gris);
+  border: 1px solid var(--gris-claro);
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.stat-card:hover { border-color: var(--verde); }
+
+.stat-card .accent {
+  position: absolute;
+  top: 0; left: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 12px 0 0 12px;
+}
+
+.accent-verde { background: var(--verde); }
+.accent-amarillo { background: var(--amarillo); }
+.accent-azul { background: var(--azul); }
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.stat-sub {
+  font-size: 0.8rem;
+  color: var(--texto-suave);
+  margin-top: 0.3rem;
+}
+
+/* PANEL */
+.panel {
+  background: var(--gris);
+  border: 1px solid var(--gris-claro);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  animation: fadeDown 0.4s ease 0.2s both;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid var(--gris-claro);
+}
+
+.panel-header h2 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.panel-body { padding: 1.5rem; }
+
+/* FORM GENERAR */
+.generar-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--texto-suave);
+}
+
+select, input[type="date"] {
+  padding: 0.65rem 1rem;
+  background: var(--negro);
+  border: 1.5px solid var(--gris-claro);
+  border-radius: 8px;
+  color: var(--texto);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+
+select:focus, input[type="date"]:focus { border-color: var(--verde); }
+
+.btn-generar {
+  padding: 0.65rem 1.5rem;
+  background: var(--verde);
+  color: var(--negro);
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-generar:hover { background: var(--verde-oscuro); }
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  color: var(--texto-suave);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--gris-claro);
+}
+
+td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--gris-claro);
+}
+
+tr:last-child td { border-bottom: none; }
+
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-ingresos { background: rgba(29,185,84,0.15); color: var(--verde); }
+.badge-asistencia { background: rgba(240,192,64,0.15); color: var(--amarillo); }
+.badge-reservas { background: rgba(58,134,255,0.15); color: var(--azul); }
+
+.action-btn {
+  background: none;
+  border: 1px solid var(--gris-claro);
+  color: var(--texto-suave);
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.action-btn:hover { border-color: var(--error); color: var(--error); }
+
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+.filtro-select {
+  padding: 0.4rem 0.8rem;
+  background: var(--negro);
+  border: 1.5px solid var(--gris-claro);
+  border-radius: 6px;
+  color: var(--texto);
+  font-size: 0.82rem;
+  outline: none;
+  cursor: pointer;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
