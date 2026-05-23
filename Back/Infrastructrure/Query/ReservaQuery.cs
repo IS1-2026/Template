@@ -17,7 +17,17 @@ namespace Infrastructure.Query
 
         public async Task<Reserva> ConsultarReserva(int ReservaId, CancellationToken ct = default)
         {
-            return await _context.Reservas.FirstOrDefaultAsync(r => r.IdReserva == ReservaId,ct);
+            return await _context.Reservas.Include(c=>c.HorarioCancha).FirstOrDefaultAsync(r => r.IdReserva == ReservaId,ct);
+        }
+
+        public async Task<bool>ExisteReserva(int canchaId,DateOnly fecha,CancellationToken ct = default) 
+        {
+            return await _context.Reservas.AnyAsync(r =>r.IdCancha == canchaId && r.Fecha == fecha,ct);
+        }
+
+        public async Task<List<Reserva>> ListarPorCanchaYFecha(int idCancha, DateOnly Fecha, CancellationToken ct = default)
+        {
+            return await _context.Reservas.Where(res=>res.IdCancha==idCancha && res.Fecha==Fecha).ToListAsync(ct);
         }
 
         public async Task<List<Reserva>> ListarReservas(CancellationToken ct = default)

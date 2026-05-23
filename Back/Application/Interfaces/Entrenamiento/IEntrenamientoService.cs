@@ -1,10 +1,5 @@
 ﻿using Application.DTOs.Request.Entrenamiento;
 using Application.DTOs.Response.Entrenamiento;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interfaces.Entrenamiento
 {
@@ -16,7 +11,7 @@ namespace Application.Interfaces.Entrenamiento
 
         Task<EntrenamientoResponse> ConsultarEntrenamiento(int entrenamientoId);
 
-       Task<EntrenamientoResponse> ProgramarEntrenamiento(ProgramarEntrenamientoRequest request);
+        Task<EntrenamientoResponse> ProgramarEntrenamiento(ProgramarEntrenamientoRequest request);
 
         Task<EntrenamientoResponse> EliminarEntrenamiento(int entrenamientoId);
 

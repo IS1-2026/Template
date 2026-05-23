@@ -1,5 +1,7 @@
 ﻿using Application.DTOs.Request.Cancha;
+using Application.DTOs.Request.HorarioCancha;
 using Application.Interfaces.Cancha;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Template.Controllers
@@ -36,10 +38,17 @@ namespace Template.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> ModificarCancha([FromBody] ActualizarCanchaRequest request)
+        [HttpGet("{canchaId}/Horarios/{Fecha}")]
+        public async Task<IActionResult> VerDisponibilidad([FromRoute]int canchaId, [FromRoute] DateOnly Fecha)
         {
-            var response = await _service.ModificarCancha(request);
+            var response = await _service.VerDisponibilidad(canchaId,Fecha);
+            return Ok(response);
+        }
+
+        [HttpPut("horario")]
+        public async Task<IActionResult> ModificarHorarioCancha([FromBody] ActualizarHorarioCanchaRequest request)
+        {
+            var response = await _service.ModificarHorarioCancha(request);
             return Ok(response);
         }
 

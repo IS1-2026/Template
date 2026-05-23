@@ -6,10 +6,12 @@
   <title>Panel de Administrador | GolAhora</title>
 
   <link rel="stylesheet" href="./css/Admin/admin.css">
+  <link rel="stylesheet" href="./css/global/toast.css">
+  <script type="module" src="./main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body>
-
+<body> 
   <div class="dashboard">
 
     <aside class="sidebar">
@@ -17,11 +19,9 @@
 
       <nav>
         <a href="#"> Dashboard</a>
-        <a href="#"> Canchas</a>
+        <a href="#canchas"> Canchas</a>
         <a href="#"> Reservas</a>
         <a href="#"> Usuarios</a>
-        <a href="#"> Reportes</a>
-        <a href="#"> Configuración</a>
       </nav>
     </aside>
 
@@ -54,38 +54,91 @@
         </div>
       </section>
 
-      <section class="table-section">
-        <h2>Últimas reservas</h2>
+      <section class="table-section" id="canchas">
 
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Usuario</th>
-              <th>Cancha</th>
-              <th>Fecha</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
+        <div class="section-header">
+          <h2>Listado de canchas</h2>
+         
 
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Juan Pérez</td>
-              <td>Cancha 1</td>
-              <td>20/05</td>
-              <td class="ok">Confirmada</td>
-            </tr>
+          <button class="btn-primary">
+            + Nueva cancha
+          </button>
+        </div>
+         Endpoint para ver todas las canchas creadas
+      </section>
 
-            <tr>
-              <td>2</td>
-              <td>María López</td>
-              <td>Cancha 2</td>
-              <td>21/05</td>
-              <td class="pending">Pendiente</td>
-            </tr>
-          </tbody>
-        </table>
+      <section class="form-section" id="crear">
+
+        <h2>Crear nueva cancha</h2>
+
+        <form class="form-grid" id="form-cancha">
+
+          <div class="form-group">
+            <label>Nombre</label>
+            <input id="nombre" type="text" placeholder="Cancha Central">
+          </div>
+
+          <div class="form-group">
+            <label>Tipo</label>
+
+            <select id="tipos">
+              <option value="2">Fútbol 5</option>
+              <option value="1">Fútbol 7</option>
+              <option>Fútbol 11</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Horario de inicio</label>
+
+            <input id="horaInicio" type="time">
+          </div>
+
+          <div class="form-group">
+            <label>Horario de cierre</label>
+
+            <input id="horaFin" type="time">
+          </div>
+
+          <button type="submit" class="btn-primary">
+            Crear cancha
+          </button>
+
+        </form>
+      </section>
+
+      <section class="table-section" id="tiposCancha">
+         <form class="form-grid" id="form-tipo-cancha">
+
+          <div class="form-group">
+            <label>Nombre</label>
+            <input id="nombreTipoCancha" type="text" placeholder="Cancha de 5">
+          </div>
+
+          <div class="form-group">
+            <label>Superficie</label>
+            <input id="superficie" type="text" placeholder="Sintetico">
+          </div>  
+
+          <div class="form-group">
+            <label>Capacidad</label>
+            <input id="capacidad" type="number" min="1" placeholder="10">
+          </div>  
+          <div class="form-group">
+            <label>Duración (En horas)</label>
+            <input id="duracion" type="number" min="1" placeholder="1">
+          </div>  
+          <div class="form-group">
+            <label>Precio</label>
+            <input id="precio" type="number" min="1" placeholder="10000">
+          </div>  
+
+          <button type="submit" class="btn-primary">
+            Crear tipo de cancha
+          </button>
+
+        </form>
+       
       </section>
 
     </main>

@@ -1,0 +1,38 @@
+/*Los importants son para que swal no use sus estilos. Si los sacas swal va a poner sus estilos primero*/
+
+.toast-golahora {
+  background: #1a1a1a !important;
+  color: #f0f0f0 !important;
+  border: 1px solid #2a2a2a !important;
+  border-left: 4px solid #1db954 !important;
+  border-radius: 14px !important;
+
+  font-family: 'DM Sans', sans-serif !important;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.45),
+    0 0 0 1px rgba(255,255,255,0.02);
+}
+
+.toast-title {
+  color: #f0f0f0 !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+}
+
+.toast-popup-success .swal2-icon {
+  color: #1db954 !important;
+  border-color: #1db954 !important;
+}
+
+.toast-popup-error {
+  border-left: 4px solid #ef4444 !important;
+}
+
+.swal2-timer-progress-bar {
+  background: #1db954 !important;
+}
+
+.toast-popup-error .swal2-timer-progress-bar {
+  background: #ef4444 !important;
+}

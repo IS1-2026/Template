@@ -25,7 +25,7 @@ namespace Application.UseCases
                 throw new ExceptionBadRequest("Debe ingresar un nombre valido");
             }
 
-            if (request.Superficie <= 0)
+            if (String.IsNullOrEmpty(request.Superficie))
             {
                 throw new ExceptionBadRequest("Debe ingresar una superficie valida");
             }

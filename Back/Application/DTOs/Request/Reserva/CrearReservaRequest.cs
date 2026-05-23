@@ -4,8 +4,7 @@
     {
         public int DniCliente { get; set; }
         public int IdCancha { get; set; }
-        public DateTime FechaReserva { get; set; }
-        public DateTime HorarioInicio { get; set; }
-        public DateTime HorarioFin { get; set; }
+        public int IdCanchaHorario { get; set; }
+        public DateOnly Fecha { get; set; }
     }
 }

@@ -7,5 +7,6 @@ namespace Application.Interfaces.Cancha
     {
         Task<Domain.Entities.Cancha> ConsultarCancha(int CanchaId,CancellationToken ct = default);
         Task<List<Domain.Entities.Cancha>> ListarCanchas(CancellationToken ct = default);
+        Task<List<Domain.Entities.HorarioCancha>> VerDisponibilidad(int canchaId, CancellationToken ct = default);
     }
 }

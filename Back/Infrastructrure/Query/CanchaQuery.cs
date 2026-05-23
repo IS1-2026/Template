@@ -18,12 +18,16 @@ namespace Infrastructure.Query
 
         public async Task<Cancha> ConsultarCancha(int CanchaId, CancellationToken ct = default)
         {
-            return await _context.Canchas.Include(c=>c.TipoCancha).FirstOrDefaultAsync(c=>c.IdCancha==CanchaId,ct);
+            return await _context.Canchas.Include(c=>c.TipoCancha).Include(c=>c.Disponibilidad).FirstOrDefaultAsync(c=>c.IdCancha==CanchaId,ct);
         }
 
         public async Task<List<Cancha>> ListarCanchas(CancellationToken ct = default)
         {
-            return await _context.Canchas.Include(c=>c.TipoCancha).ToListAsync(ct);
+            return await _context.Canchas.Include(c=>c.TipoCancha).Include(c=>c.Disponibilidad).ToListAsync(ct);
+        }
+        public async Task<List<HorarioCancha>> VerDisponibilidad(int canchaId,CancellationToken ct = default) 
+        {
+            return await _context.HorarioCancha.Where(h=>h.IdCancha==canchaId).ToListAsync(ct);
         }
     }
 }

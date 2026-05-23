@@ -1,6 +1,4 @@
-﻿
-
-using Application.Interfaces.Reserva;
+﻿using Application.Interfaces.Reserva;
 using Domain.Entities;
 using Infrastructure.Persistence;
 

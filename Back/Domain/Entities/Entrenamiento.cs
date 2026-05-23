@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.InteropServices.Marshalling;
+
 namespace Domain.Entities
 {
     public class Entrenamiento
@@ -7,6 +9,8 @@ namespace Domain.Entities
         public IEnumerable<Inscripcion>Inscriptos { get; set; }
         public int DniEntrenador { get; set; }
         public double Precio { get; set; }
+        public int Cupo { get; set; }
+        public int IdActividad { get; set; }
 
         //Relación
         public Entrenador Entrenador { get; set; }

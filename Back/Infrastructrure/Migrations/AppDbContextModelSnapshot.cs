@@ -52,12 +52,13 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCancha"));
 
-                    b.Property<string>("Disponibilidad")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("TipoCanchaId")
                         .HasColumnType("int");
@@ -80,7 +81,10 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Cupo")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdProfesor")
+                    b.Property<int>("DniProfesor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdActividad")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Precio")
@@ -88,7 +92,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("IdClase");
 
-                    b.HasIndex("IdProfesor");
+                    b.HasIndex("DniProfesor");
 
                     b.ToTable("Clase", (string)null);
                 });
@@ -183,6 +187,9 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdEntrenamiento"));
 
+                    b.Property<int>("Cupo")
+                        .HasColumnType("int");
+
                     b.Property<int>("DniEntrenador")
                         .HasColumnType("int");
 
@@ -226,6 +233,33 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CompetenciaIdCompeticion");
 
                     b.ToTable("Equipo", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entities.HorarioCancha", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Dia")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("HoraFin")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("HoraInicio")
+                        .HasColumnType("time");
+
+                    b.Property<int>("IdCancha")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdCancha");
+
+                    b.ToTable("HorarioCancha", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Inscripcion", b =>
@@ -394,16 +428,13 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("EsValida")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("FechaRes")
-                        .HasColumnType("datetime");
-
-                    b.Property<DateTime>("HorarioFin")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("HorarioInicio")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("Fecha")
+                        .HasColumnType("date");
 
                     b.Property<int>("IdCancha")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdCanchaHorario")
                         .HasColumnType("int");
 
                     b.Property<int?>("IdDescuento")
@@ -417,6 +448,8 @@ namespace Infrastructure.Migrations
                     b.HasIndex("DniCliente");
 
                     b.HasIndex("IdCancha");
+
+                    b.HasIndex("IdCanchaHorario");
 
                     b.ToTable("Reserva", (string)null);
                 });
@@ -443,8 +476,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Precio")
                         .HasColumnType("int");
 
-                    b.Property<int>("Superficie")
-                        .HasColumnType("int");
+                    b.Property<string>("Superficie")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdTipoCancha");
 
@@ -579,7 +613,7 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Profesor", "Profesor")
                         .WithMany("Clases")
-                        .HasForeignKey("IdProfesor")
+                        .HasForeignKey("DniProfesor")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -613,6 +647,17 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Entities.Competencia", null)
                         .WithMany("Equipos")
                         .HasForeignKey("CompetenciaIdCompeticion");
+                });
+
+            modelBuilder.Entity("Domain.Entities.HorarioCancha", b =>
+                {
+                    b.HasOne("Domain.Entities.Cancha", "Cancha")
+                        .WithMany("Disponibilidad")
+                        .HasForeignKey("IdCancha")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cancha");
                 });
 
             modelBuilder.Entity("Domain.Entities.Inscripcion", b =>
@@ -724,9 +769,17 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.HorarioCancha", "HorarioCancha")
+                        .WithMany()
+                        .HasForeignKey("IdCanchaHorario")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Cancha");
 
                     b.Navigation("Cliente");
+
+                    b.Navigation("HorarioCancha");
                 });
 
             modelBuilder.Entity("Domain.Entities.Torneo", b =>
@@ -763,6 +816,11 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("Domain.Entities.Profesor", "Dni")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Cancha", b =>
+                {
+                    b.Navigation("Disponibilidad");
                 });
 
             modelBuilder.Entity("Domain.Entities.Clase", b =>

@@ -1,12 +1,14 @@
 const base_Url = "http://localhost:5279/api/v1/";
 
-export async function getData(enpointUrl)
+export async function getData(endpointUrl)
 {
     try
     {
-        const response = await fetch(`${base_Url}${enpointUrl}`,
-        {
-            "Accept":"application/json"
+       const response = await fetch(`${base_Url}${endpointUrl}`, {
+        method: "GET",
+        headers: {
+            "Accept": "application/json"
+        }
         });
         const data = await response.json();
         return data;

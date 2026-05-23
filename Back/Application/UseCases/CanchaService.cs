@@ -1,8 +1,14 @@
 ﻿using Application.DTOs.Request.Cancha;
+using Application.DTOs.Request.HorarioCancha;
+using Application.DTOs.Response;
 using Application.DTOs.Response.Cancha;
+using Application.DTOs.Response.HorarioCancha;
 using Application.Exceptions;
 using Application.Interfaces.Cancha;
+using Application.Interfaces.HorarioCancha;
+using Application.Interfaces.Reserva;
 using Application.Interfaces.TipoCancha;
+using Domain.Entities;
 
 namespace Application.UseCases
 {
@@ -11,12 +17,17 @@ namespace Application.UseCases
         private readonly ICanchaCommand _canchaCommand;
         private readonly ICanchaQuery _canchaQuery;
         private readonly ITipoCanchaQuery _tipoCanchaQuery;
+        private readonly IHorarioCanchaService _horarioCanchaService;
+        private readonly IReservaQuery _reservaQuery;
 
-        public CanchaService(ICanchaCommand canchaCommand,ICanchaQuery canchaQuery,ITipoCanchaQuery tipoCanchaQuery)
+        public CanchaService(ICanchaCommand canchaCommand, ICanchaQuery canchaQuery, ITipoCanchaQuery tipoCanchaQuery,
+            IHorarioCanchaService horarioCanchaService,IReservaQuery reservaQuery)
         {
             _canchaCommand = canchaCommand;
             _canchaQuery = canchaQuery;
             _tipoCanchaQuery = tipoCanchaQuery;
+            _horarioCanchaService= horarioCanchaService;
+            _reservaQuery = reservaQuery;
         }
 
         public async Task<CanchaResponse> CrearCancha(CrearCanchaRequest request)
@@ -25,37 +36,53 @@ namespace Application.UseCases
             {
                 throw new ExceptionBadRequest("Ingrese un id válido");
             }
-
-            var horaInicio = TimeSpan.Parse(request.HoraInicio);
-            var horaFin = TimeSpan.Parse(request.HoraFin);
-
-            if (horaInicio >= horaFin)
+            if (String.IsNullOrEmpty(request.Nombre) || request.Nombre.Length>20) 
             {
-                throw new ExceptionBadRequest("La hora de inicio debe ser menor a la hora fin");
+                throw new ExceptionBadRequest("Ingrese un nombre valido");
             }
 
-            var tipoCancha = await _tipoCanchaQuery.ObtenerTipoCancha(request.IdTipoCancha);
+           var tipoCancha = await _tipoCanchaQuery.ObtenerTipoCancha(request.IdTipoCancha);
 
             if (tipoCancha == null)
             {
                 throw new ExceptionNotFound("El tipo de cancha no fue encontrado");
             }
+            if(request.Horarios == null || !request.Horarios.Any()) 
+            {
+                throw new ExceptionBadRequest("Tiene que ingresar un horario");
+            }
 
-            var disponibilidad = GenerarDisponibilidad(horaInicio,horaFin,tipoCancha.Duracion);
+            foreach (var horario in request.Horarios) 
+            {
+                if (horario.HoraInicio > horario.HoraFin) 
+                {
+                    throw new ExceptionBadRequest("El horario de inicio debe ser mayor al horario de fin");
+                }
+            }
 
-            var cancha = new Domain.Entities.Cancha
+            var cancha = new Cancha
             {
                 TipoCanchaId = request.IdTipoCancha,
-                Disponibilidad = disponibilidad,
+                Nombre = request.Nombre,
                 Estado = true,
-                TipoCancha = tipoCancha
+                Disponibilidad = new List<HorarioCancha>()
             };
 
             var canchaCreada = await _canchaCommand.CrearCancha(cancha);
+            var slotsTotales = new List<HorarioCancha>();
+            foreach (var h in request.Horarios)
+            {
+                var slots = GenerarSlots(h.Dia, h.HoraInicio, h.HoraFin, tipoCancha.Duracion, canchaCreada.IdCancha);
+
+                slotsTotales.AddRange(slots);
+            }
+            canchaCreada.Disponibilidad = slotsTotales;
+            await _canchaCommand.ModificarCancha(canchaCreada);
 
             return new CanchaResponse
             {
                 IdCancha = canchaCreada.IdCancha,
+                Nombre = canchaCreada.Nombre,
 
                 tipoCancha = new DTOs.Response.TipoCancha.TipoCanchaResponse
                 {
@@ -67,7 +94,14 @@ namespace Application.UseCases
                     Duracion = canchaCreada.TipoCancha.Duracion,
                 },
 
-                Disponibilidad = canchaCreada.Disponibilidad,
+                Disponibilidad = canchaCreada.Disponibilidad.Select(horario => new HorarioCanchaResponse 
+                {
+                    HorarioCanchaId=horario.Id,
+                    Dia=horario.Dia,
+                    HoraInicio=horario.HoraInicio, 
+                    HoraFin=horario.HoraFin,
+                   
+                }).ToList()
             };
         }
 
@@ -99,23 +133,26 @@ namespace Application.UseCases
                     Duracion = cancha.TipoCancha.Duracion,
                 },
 
-                Disponibilidad = cancha.Disponibilidad,
+                Disponibilidad = cancha.Disponibilidad.Select(horario => new HorarioCanchaResponse
+                {HorarioCanchaId = horario.Id,
+                    Dia = horario.Dia,
+                    HoraInicio = horario.HoraInicio,
+                    HoraFin = horario.HoraFin,
+                    
+                }).ToList()
             };
         }
 
-        public async Task<CanchaResponse> ModificarCancha(ActualizarCanchaRequest request)
+        public async Task<CanchaResponse> ModificarHorarioCancha(ActualizarHorarioCanchaRequest request)
         {
             if (request.CanchaId <= 0)
             {
                 throw new ExceptionBadRequest("Ingrese un valor válido");
             }
-
-            var horaInicio = TimeSpan.Parse(request.HoraInicio);
-            var horaFin = TimeSpan.Parse(request.HoraFin);
-
-            if (horaInicio >= horaFin)
+            if (request.HoraInicio >= request.HoraFin)
             {
-                throw new ExceptionBadRequest("La hora de inicio debe ser menor a la hora fin");
+                throw new ExceptionBadRequest("Hora inicio debe ser menor a hora fin");
+
             }
 
             var cancha = await _canchaQuery.ConsultarCancha(request.CanchaId);
@@ -124,8 +161,9 @@ namespace Application.UseCases
             {
                 throw new ExceptionNotFound("Cancha no encontrada");
             }
+            cancha.Disponibilidad.RemoveAll(horario => horario.Dia == request.Dia);
 
-            cancha.Disponibilidad = GenerarDisponibilidad(horaInicio,horaFin,cancha.TipoCancha.Duracion);
+            var nuevosSlots = GenerarSlots(request.Dia,request.HoraInicio,request.HoraFin,cancha.TipoCancha.Duracion,cancha.IdCancha);
 
             var canchaAct = await _canchaCommand.ModificarCancha(cancha);
 
@@ -143,7 +181,14 @@ namespace Application.UseCases
                     Duracion = canchaAct.TipoCancha.Duracion,
                 },
 
-                Disponibilidad = canchaAct.Disponibilidad,
+                Disponibilidad = cancha.Disponibilidad.Select(horario => new HorarioCanchaResponse
+                {
+                    HorarioCanchaId = horario.Id,
+                    Dia = horario.Dia,
+                    HoraInicio = horario.HoraInicio,
+                    HoraFin = horario.HoraFin,
+                    
+                }).ToList(),
             };
         }
 
@@ -177,7 +222,13 @@ namespace Application.UseCases
                     Duracion = cancha.TipoCancha.Duracion,
                 },
 
-                Disponibilidad = cancha.Disponibilidad,
+                Disponibilidad = cancha.Disponibilidad.Select(horario => new HorarioCanchaResponse
+                {HorarioCanchaId = horario.Id,
+                    Dia = horario.Dia,
+                    HoraInicio = horario.HoraInicio,
+                    HoraFin = horario.HoraFin,
+                   
+                }).ToList(),
             };
         }
 
@@ -188,6 +239,7 @@ namespace Application.UseCases
             return canchas.Select(cancha => new CanchaResponse
             {
                 IdCancha = cancha.IdCancha,
+                Nombre=cancha.Nombre,
 
                 tipoCancha = new DTOs.Response.TipoCancha.TipoCanchaResponse
                 {
@@ -199,7 +251,12 @@ namespace Application.UseCases
                     Duracion = cancha.TipoCancha.Duracion,
                 },
 
-                Disponibilidad = cancha.Disponibilidad,
+                Disponibilidad = cancha.Disponibilidad.Select(horario => new HorarioCanchaResponse
+                {HorarioCanchaId = horario.Id,
+                    Dia = horario.Dia,
+                    HoraInicio = horario.HoraInicio,
+                    HoraFin = horario.HoraFin,
+                }).ToList(),
 
             }).ToList();
         }
@@ -236,24 +293,77 @@ namespace Application.UseCases
                     Duracion = cancha.TipoCancha.Duracion,
                 },
 
-                Disponibilidad = cancha.Disponibilidad,
+                Disponibilidad = cancha.Disponibilidad.Select(horario => new HorarioCanchaResponse
+                {
+                    HorarioCanchaId = horario.Id,
+                    Dia = horario.Dia,
+                    HoraInicio = horario.HoraInicio,
+                    HoraFin = horario.HoraFin,
+                }).ToList(),
             };
         }
 
-        private List<TimeSpan> GenerarDisponibilidad(TimeSpan horaInicio,TimeSpan horaFin,int horas){
-            var disponibilidad = new List<TimeSpan>();
-
-            var horaActual = horaInicio;
-
-            while (horaActual.Add(TimeSpan.FromHours(horas)) <= horaFin)
+        public async Task<List<HorarioCanchaResponse>> VerDisponibilidad(int CanchaId, DateOnly fecha)
+        {
+            if (CanchaId <= 0)
             {
-                disponibilidad.Add(horaActual);
-
-                horaActual = horaActual.Add(
-                    TimeSpan.FromHours(horas));
+                throw new ExceptionBadRequest("Ingrese una cancha valida");
             }
 
-            return disponibilidad;
+            var cancha = await _canchaQuery.ConsultarCancha(CanchaId);
+            if (cancha == null)
+            {
+                throw new ExceptionNotFound("La cancha ingresada no fue encontrada");
+            }
+
+            var diaSeleccionado = fecha.DayOfWeek;
+
+            var horarios = await _canchaQuery.VerDisponibilidad(cancha.IdCancha);
+
+            var horariosDelDia = horarios
+                .Where(h => h.Dia == diaSeleccionado)
+                .ToList();
+
+            var reservas = await _reservaQuery.ListarPorCanchaYFecha(cancha.IdCancha, fecha);
+
+            var ocupados = reservas.Select(r => r.IdCanchaHorario).ToHashSet();
+
+            var resultado = horariosDelDia.Select(h => new HorarioCanchaResponse
+            {
+                HorarioCanchaId=h.Id,
+                Dia = h.Dia,
+                HoraInicio = h.HoraInicio,
+                HoraFin = h.HoraFin,
+                Disponible = !ocupados.Contains(h.Id)
+            }).ToList();
+
+            return resultado;
         }
+
+
+        private List<HorarioCancha> GenerarSlots(DayOfWeek dia,TimeSpan inicio,TimeSpan fin,int duracionHoras,int canchaId)
+        {
+            var slots = new List<HorarioCancha>();
+
+            var duracion = TimeSpan.FromHours(duracionHoras);
+            var actual = inicio;
+
+            while (actual + duracion <= fin)
+            {
+                slots.Add(new HorarioCancha
+                {
+                    IdCancha = canchaId,
+                    Dia = dia,
+                    HoraInicio = actual,
+                    HoraFin = actual + duracion,
+                });
+
+                actual = actual + duracion;
+            }
+
+            return slots;
+        }
+
+        
     }
 }

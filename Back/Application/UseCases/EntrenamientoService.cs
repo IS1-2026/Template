@@ -24,6 +24,8 @@ namespace Application.UseCases
 
         }
 
+
+
         public async Task<EntrenamientoResponse> ModificarEntrenamiento(ModificarEntrenamientoRequest request)
         {
             if (request == null)
@@ -56,8 +58,6 @@ namespace Application.UseCases
             };
 
         }
-
-
         public async Task<EntrenamientoResponse> ConsultarEntrenamiento(int entrenamientoId)
         {
             if (entrenamientoId <= 0)
@@ -81,21 +81,6 @@ namespace Application.UseCases
                Precio = Entrenamiento.Precio
             };
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public async Task<EntrenamientoResponse> ProgramarEntrenamiento(ProgramarEntrenamientoRequest request)
         {
             var entrenamiento = new Entrenamiento
