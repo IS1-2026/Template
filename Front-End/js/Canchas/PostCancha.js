@@ -1,5 +1,5 @@
 import { postData } from "../Global/ApiServices.js";
-export function InsertarCancha(nombre,tipo,inicio,fin)
+export function InsertarCancha(tipo,nombre,horarios)
 {   
     const endpointUrl = 'Cancha';
 
@@ -7,8 +7,7 @@ export function InsertarCancha(nombre,tipo,inicio,fin)
     {
         idTipoCancha:parseInt(tipo),
         nombre:nombre,
-        horaInicio:inicio,
-        horaFin:fin
+        horarios:horarios
     }
 
     return postData(endpointUrl,body);

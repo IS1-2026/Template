@@ -66,5 +66,21 @@ namespace Application.UseCases
                 Duracion = tipoCanchaCreada.Duracion,
             };
         }
+
+        public async Task<List<TipoCanchaResponse>> ListarTipoCancha()
+        {
+            var canchas = await _query.ListarTipoCanchas();
+
+            return canchas.Select(tipoCancha =>  new TipoCanchaResponse
+            {
+                Id = tipoCancha.IdTipoCancha,
+                Nombre = tipoCancha.Nombre,
+                Superficie = tipoCancha.Superficie,
+                Capacidad = tipoCancha.Capacidad,
+                Precio = tipoCancha.Precio,
+                Duracion = tipoCancha.Duracion,
+            }).ToList(); 
+
+        }
     }
 }

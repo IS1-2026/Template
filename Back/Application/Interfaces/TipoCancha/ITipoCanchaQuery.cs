@@ -7,5 +7,6 @@ namespace Application.Interfaces.TipoCancha
     {
         Task<bool> ExisteTipoCancha(int id, CancellationToken ct = default);
         Task<Domain.Entities.TipoCancha> ObtenerTipoCancha(int id, CancellationToken ct = default);
+        Task<List<Domain.Entities.TipoCancha>> ListarTipoCanchas(CancellationToken ct = default);
     }
 }

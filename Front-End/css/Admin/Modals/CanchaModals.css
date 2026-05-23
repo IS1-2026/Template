@@ -1,0 +1,139 @@
+
+
+body.modal-open{
+  overflow:hidden;
+}
+
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.75);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  backdrop-filter:blur(4px);
+}
+
+
+.modal-content{
+  width:100%;
+  max-width:500px;
+  background:#161616;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:24px;
+  animation:modalShow 0.2s ease;
+}
+
+@keyframes modalShow{
+  from{
+    opacity:0;
+    transform:translateY(10px) scale(0.98);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+
+.modal-header h2{
+  color:white;
+  font-size:24px;
+}
+
+.modal-close{
+  background:none;
+  border:none;
+  color:#bdbdbd;
+  font-size:22px;
+  cursor:pointer;
+}
+
+.modal-close:hover{
+  color:white;
+}
+
+.modal-form{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.form-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.form-group label{
+  color:#d1d5db;
+  font-size:14px;
+}
+
+.form-group input,
+.form-group select{
+  background:#0f0f0f;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;
+  padding:12px;
+  color:white;
+  outline:none;
+}
+
+.form-group input:focus,
+.form-group select:focus{
+  border-color:#22c55e;
+}
+
+
+
+.modal-btn{
+  margin-top:10px;
+  width:100%;
+}
+
+
+.btn-delete-horario{
+  width:34px;
+  height:34px;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  border-radius:10px;
+
+  background:#262626;
+  color:#fff;
+
+  cursor:pointer;
+  font-size:16px;
+  font-weight:bold;
+
+  transition:0.2s ease;
+
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.btn-delete-horario:hover{
+  background:#ef4444;
+  border-color:#ef4444;
+  transform:scale(1.05);
+}
+
+.btn-delete-horario:active{
+  transform:scale(0.95);
+}

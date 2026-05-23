@@ -1,0 +1,113 @@
+
+.admin-canchas-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+  gap:20px;
+}
+
+
+.admin-card{
+  background:#161616;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:20px;
+  transition:0.25s ease;
+}
+
+.admin-card:hover{
+  transform:translateY(-3px);
+  border-color:#22c55e;
+}
+
+
+.admin-card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:18px;
+}
+
+.admin-card-title{
+  color:white;
+  font-size:22px;
+  margin-bottom:5px;
+}
+
+.admin-card-subtitle{
+  color:#bdbdbd;
+  font-size:14px;
+}
+
+
+.admin-badge{
+  background:#22c55e;
+  color:black;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+
+.admin-card-info{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.admin-info-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:8px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+.admin-info-label{
+  color:#9ca3af;
+  font-size:14px;
+}
+
+.admin-info-value{
+  color:white;
+  font-weight:600;
+}
+
+
+.admin-card-actions{
+  display:flex;
+  gap:12px;
+}
+
+.admin-btn{
+  flex:1;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s ease;
+}
+
+
+.admin-btn-edit{
+  background:#22c55e;
+  color:black;
+}
+
+.admin-btn-edit:hover{
+  background:#16a34a;
+}
+
+
+.admin-btn-delete{
+  background:#262626;
+  color:white;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.admin-btn-delete:hover{
+  background:#dc2626;
+  border-color:#dc2626;
+}

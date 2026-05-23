@@ -3,7 +3,6 @@ import { InsertarTipoCancha } from "../PostTipoCancha.js";
 export function crearTipoCancha()
 {
     const form = document.getElementById('form-tipo-cancha');
-    console.log(form);
     form.addEventListener('submit',async (e)=>
         {
             e.preventDefault();
@@ -36,7 +35,6 @@ export function crearTipoCancha()
                }
             catch(error)
                 {
-                console.error(error);
                 Swal.fire({
                 toast: true,
                 position: "bottom-end",

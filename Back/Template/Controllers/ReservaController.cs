@@ -18,6 +18,7 @@ namespace Template.Controllers
         [HttpPost]
         public async Task<IActionResult> CrearReserva([FromBody] CrearReservaRequest request)
         {
+            Console.WriteLine(request.Fecha);
             var response = await _service.CrearReserva(request);
             return CreatedAtAction(nameof(ConsultarReserva), new { reservaId = response.ReservaId }, response);
         }

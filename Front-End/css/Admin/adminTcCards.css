@@ -1,0 +1,105 @@
+
+.admin-tipos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+  gap:20px;
+}
+
+.tipo-card{
+  background:#161616;
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:18px;
+  padding:22px;
+  transition:0.25s ease;
+}
+
+.tipo-card:hover{
+  transform:translateY(-3px);
+  border-color:#22c55e;
+}
+
+
+.tipo-card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.tipo-card-title{
+  color:white;
+  font-size:24px;
+}
+
+.tipo-badge{
+  background:#22c55e;
+  color:black;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:bold;
+}
+
+
+.tipo-card-info{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:24px;
+}
+
+.tipo-info-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.tipo-info-label{
+  color:#9ca3af;
+  font-size:14px;
+}
+
+.tipo-info-value{
+  color:white;
+  font-weight:600;
+}
+
+
+.tipo-card-footer{
+  display:flex;
+  gap:12px;
+}
+
+.tipo-btn{
+  flex:1;
+  border:none;
+  border-radius:10px;
+  padding:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s ease;
+}
+
+
+.tipo-btn-edit{
+  background:#22c55e;
+  color:black;
+}
+
+.tipo-btn-edit:hover{
+  background:#16a34a;
+}
+
+
+.tipo-btn-delete{
+  background:#262626;
+  color:white;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.tipo-btn-delete:hover{
+  background:#dc2626;
+  border-color:#dc2626;
+}
