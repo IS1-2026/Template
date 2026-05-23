@@ -21,5 +21,12 @@ namespace Template.Controllers
             var response = await _service.CrearTipoCancha(request);
             return CreatedAtAction(nameof(CrearTipoCancha), new { id = response.Id }, response);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ListarCanchas()
+        {
+            var result = await _service.ListarTipoCancha();
+            return Ok(result);
+        }
     }
 }

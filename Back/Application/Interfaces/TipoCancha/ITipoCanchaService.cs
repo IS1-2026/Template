@@ -8,5 +8,6 @@ namespace Application.Interfaces.TipoCancha
     public interface ITipoCanchaService
     {
         Task<TipoCanchaResponse> CrearTipoCancha(CrearTipoCanchaRequest request);
+        Task<List<TipoCanchaResponse>> ListarTipoCancha();
     }
 }

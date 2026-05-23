@@ -119,7 +119,7 @@ export function abrirModal(cancha) {
               try {
                 const dni = Number(localStorage.getItem("dni"));
                 const horarioCanchaId = Number(btnHorario.dataset.id);
-                
+                console.log(fechaSeleccionadaGlobal);
                 await CrearReserva(dni,cancha.idCancha,horarioCanchaId,fechaSeleccionadaGlobal);
 
                 Swal.fire({

@@ -19,6 +19,11 @@ namespace Infrastructure.Query
             return await _context.TiposCancha.AnyAsync(t => t.IdTipoCancha == id, ct);
         }
 
+        public async Task<List<TipoCancha>> ListarTipoCanchas(CancellationToken ct = default)
+        {
+            return await _context.TiposCancha.ToListAsync(ct);
+        }
+
         public async Task<TipoCancha> ObtenerTipoCancha(int id, CancellationToken ct = default)
         {
             return await _context.TiposCancha.FirstOrDefaultAsync(t => t.IdTipoCancha == id, ct);
