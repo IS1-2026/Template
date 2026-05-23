@@ -94,7 +94,9 @@ namespace Application.UseCases
                     HoraInicio= horarioCancha.HoraInicio,
                     HoraFin= horarioCancha.HoraFin,
                 },
-                Total = reservaCreada.MontoTotal
+                Total = reservaCreada.MontoTotal,
+                NombreCancha=reservaCreada.Cancha.Nombre,
+                esValida=true
             };
         }
 
@@ -123,7 +125,9 @@ namespace Application.UseCases
                     HoraInicio = reserva.HorarioCancha.HoraInicio,
                     HoraFin = reserva.HorarioCancha.HoraFin,
                 },
-                Total = reserva.MontoTotal
+                Total = reserva.MontoTotal,
+                NombreCancha = reserva.Cancha.Nombre,
+                esValida=reserva.EsValida
             };
         }
 
@@ -142,7 +146,11 @@ namespace Application.UseCases
                     HoraInicio = r.HorarioCancha.HoraInicio,
                     HoraFin = r.HorarioCancha.HoraFin,
                 },
-                Total = r.MontoTotal
+                Total = r.MontoTotal,
+                NombreCancha = r.Cancha.Nombre,
+                esValida=r.EsValida
+
+
             }).ToList();
         }
 
@@ -183,7 +191,11 @@ namespace Application.UseCases
                     HoraInicio = horarioCancha.HoraInicio,
                     HoraFin = horarioCancha.HoraFin,
                 },
-                Total = reservaActualizada.MontoTotal
+                Total = reservaActualizada.MontoTotal,
+                NombreCancha = reservaActualizada.Cancha.Nombre,
+                esValida= reservaActualizada.EsValida,
+
+
             };
         }
 
@@ -214,8 +226,32 @@ namespace Application.UseCases
                     HoraInicio = reserva.HorarioCancha.HoraInicio,
                     HoraFin = reserva.HorarioCancha.HoraFin,
                 },
-                Total = reserva.MontoTotal
+                Total = reserva.MontoTotal,
+                NombreCancha = reserva.Cancha.Nombre,
+                esValida=reserva.EsValida
             };
+        }
+
+        public async Task<List<ReservaResponse>> ListarReservasPorDni(int dni)
+        {
+            var reservas = await _reservaQuery.ListarPorDniCliente(dni);
+            return reservas.Select(r => new ReservaResponse
+            {
+
+                ReservaId = r.IdReserva,
+                DniCliente = r.DniCliente,
+                ReservaHorarioCanchaResponse = new DTOs.Response.HorarioCancha.ReservaHorarioCanchaResponse
+                {
+                    IdCanchaHorario = r.HorarioCancha.Id,
+                    Fecha = r.Fecha,
+                    HoraInicio = r.HorarioCancha.HoraInicio,
+                    HoraFin = r.HorarioCancha.HoraFin,
+                },
+                Total = r.MontoTotal,
+                NombreCancha = r.Cancha.Nombre,
+                esValida = r.EsValida
+
+            }).ToList();
         }
     }
 }

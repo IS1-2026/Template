@@ -2,6 +2,7 @@ import { CreateCards } from "./js/Canchas/Cards/CreateCards.js";
 import { crearTipoCancha } from "./js/TipoCancha/CrearTipoCancha.js/crearTipoCancha.js";
 import { actualizarNavbar } from "./js/Global/NavBar/ActNavbar.js";
 import { adminPanel } from "./js/Admin/admin.js";
+import { createReservaCard } from "./js/Reserva/Cards/CreateReservaCars.js";
 document.addEventListener("DOMContentLoaded", () => {
     actualizarNavbar();
   const page = window.location.pathname.split("/").pop();
@@ -9,7 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
   if (page === "canchas.html") {
     CreateCards();
   }
-   if (page === "admin.html") {
-      adminPanel();
+  if (page === "admin.html") {
+    adminPanel();
   }
+  if (page === "reservas.html") {
+    createReservaCard();
+
+    }
 });

@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Request.Reserva;
 using Application.Interfaces.Reserva;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Template.Controllers
 {
@@ -34,6 +35,12 @@ namespace Template.Controllers
         public async Task<IActionResult> ListarReservas()
         {
             var response = await _service.ListarReservas();
+            return Ok(response);
+        }
+        [HttpGet("{dni}/reservas")]
+        public async Task<IActionResult> ListarReservasPorDni(int dni)
+        {
+            var response = await _service.ListarReservasPorDni(dni);
             return Ok(response);
         }
 

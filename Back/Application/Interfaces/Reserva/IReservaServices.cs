@@ -9,6 +9,7 @@ namespace Application.Interfaces.Reserva
         Task<ReservaResponse> ModificarReserva(ActualizarReservaRequest request);
         Task<ReservaResponse> ConsultarReserva(int ReservaId);
         Task<ReservaResponse> EliminarReserva(int ReservaId);
+        Task<List<ReservaResponse>> ListarReservasPorDni(int dni);
         Task<List<ReservaResponse>> ListarReservas();
     }
 }

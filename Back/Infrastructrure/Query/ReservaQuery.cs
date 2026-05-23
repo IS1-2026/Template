@@ -30,6 +30,11 @@ namespace Infrastructure.Query
             return await _context.Reservas.Where(res=>res.IdCancha==idCancha && res.Fecha==Fecha).ToListAsync(ct);
         }
 
+        public async Task<List<Reserva>> ListarPorDniCliente(int dni, CancellationToken ct = default)
+        {
+            return await _context.Reservas.Where(r=>r.DniCliente==dni).Include(r=>r.HorarioCancha).Include(r=>r.Cancha).ToListAsync(ct);
+        }
+
         public async Task<List<Reserva>> ListarReservas(CancellationToken ct = default)
         {
             return await _context.Reservas.ToListAsync(ct);

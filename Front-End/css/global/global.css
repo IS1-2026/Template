@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap');
+
 nav {
   display: flex;
   align-items: center;
@@ -16,7 +18,10 @@ nav {
   letter-spacing: 2px;
   cursor: pointer;
 }
-
+.logo span{
+  font-family: inherit;
+  color: var(--texto);
+}
 
 nav ul {
   flex: 1;
@@ -63,6 +68,9 @@ nav ul a:hover {
 nav ul a:hover::after {
   width: 100%;
 }
+
+
+
 
 .btn {
   display: inline-flex;

@@ -9,5 +9,7 @@ namespace Application.DTOs.Response.Reserva
         public int DniCliente { get;set; }
         public ReservaHorarioCanchaResponse ReservaHorarioCanchaResponse { get; set; }
         public double Total { get; set; }
+        public string NombreCancha { get; set; }
+        public bool esValida { get; set; }
     }
 }
