@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.DTOs.Response.Entrenamiento;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace Application.DTOs.Response.Profesional
 {
     public class EntrenadorResponse : ProfesionalResponse
     {
-        //Se debera modificar el nombre por el DTO del entrenamiento
-        //public List<EntrenamientoDto> Entrenamientos { get; set; } = new List<EntrenamientoDto>();
+
+        public List<EntrenamientoResponse> Entrenamientos { get; set; } = new List<EntrenamientoResponse>();
 
     }
 }

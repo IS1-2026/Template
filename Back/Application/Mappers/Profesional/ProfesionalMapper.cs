@@ -25,7 +25,7 @@ namespace Application.Mappers.Profesional
                 Localidad = request.Localidad,
                 Pais = request.Pais,
                 Correo = request.Correo,
-                Password = request.Contraseña,
+                Password = request.Password,
                 FechaNac = request.FechaNac,
 
                 // Dato de la herencia de Profesional
@@ -46,7 +46,7 @@ namespace Application.Mappers.Profesional
                 Localidad = request.Localidad,
                 Pais = request.Pais,
                 Correo = request.Correo,
-                Password = request.Contraseña,
+                Password = request.Password,
                 FechaNac = request.FechaNac,
 
                 // Dato de la herencia de Profesional

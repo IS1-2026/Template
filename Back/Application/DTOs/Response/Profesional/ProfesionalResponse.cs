@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace Application.DTOs.Response.Profesional
 {
-    public class ProfesionalResponse : UsuarioResponse
+    public class ProfesionalResponse 
     {
+        public int Dni { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Localidad { get; set; }
+        public string Pais { get; set; }
+        public string Correo { get; set; }
+        public bool Estado { get; set; }
         public string Certificado { get; set; }
         public bool EstaCertificado { get; set; }
     }

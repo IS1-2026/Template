@@ -17,4 +17,5 @@ namespace Application.DTOs.Request.Cliente
         public string Pais { get; set; }
         public DateOnly FechaNac {  get; set; }
     }
+
 }

@@ -46,7 +46,7 @@ namespace Template.Controllers
             return Ok(resultado);
         }
 
-        // RF48: CONSULTAR POR DNI
+
         [HttpGet("{dni}")]
         public async Task<IActionResult> ConsultarPorDni([FromRoute] int dni)
         {
@@ -62,7 +62,7 @@ namespace Template.Controllers
             }
         }
 
-        // RF48: LISTAR TODOS
+        //RF48: LISTAR TODOS
         [HttpGet]
         public async Task<IActionResult> ConsultarTodos([FromQuery] string tipo)
         {
@@ -96,13 +96,13 @@ namespace Template.Controllers
             }
         }
 
-        // RF50: CONSULTAR E IMPRIMIR SI SE REQUIERE
-        [HttpGet("{dni}/ficha")]
+        // RF50: IMPRIMIR (COMO DUPLICA LOGICA LO COMENTO, LO DEJO POR SI SE REQUIERE)
+        /*[HttpGet("{dni}/ficha")]
         public async Task<IActionResult> ImprimirFichaProfesional([FromRoute] int dni, [FromQuery] string tipoProfesional)
         {
             var jsonResult = await _profesionalService.ImprimirFichaProfesional(dni, tipoProfesional);
             return Content(jsonResult, "application/json");
-        }
+        }*/
 
         // RF51: ASIGNAR PROFESIONALES A CLIENTES
         [HttpPost("asignar-cliente")]

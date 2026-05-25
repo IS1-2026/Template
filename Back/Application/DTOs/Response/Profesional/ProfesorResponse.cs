@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Application.DTOs.Response.Clase;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,6 @@ namespace Application.DTOs.Response.Profesional
 {
     public class ProfesorResponse : ProfesionalResponse
     {
-        //Se debera modificar el nombre por el DTO de la clase 
-       // public List<ClaseDto> Clases { get; set; } = new List<ClaseDto>();
+        public List<ClaseResponse> Clases { get; set; } = new List<ClaseResponse>();
     }
 }
