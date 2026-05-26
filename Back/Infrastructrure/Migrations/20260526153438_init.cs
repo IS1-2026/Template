@@ -53,16 +53,18 @@ namespace Infrastructure.Migrations
                 name: "Competencia",
                 columns: table => new
                 {
-                    IdCompeticion = table.Column<int>(type: "int", nullable: false)
+                    IdCompetencia = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Cupos = table.Column<int>(type: "int", nullable: false),
-                    Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                    Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    TipoCompetencia = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    FaseAct = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Competencia", x => x.IdCompeticion);
+                    table.PrimaryKey("PK_Competencia", x => x.IdCompetencia);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,18 +81,6 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Descuento", x => x.IdDescuento);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Ligas",
-                columns: table => new
-                {
-                    IdCompeticion = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ligas", x => x.IdCompeticion);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,7 +104,7 @@ namespace Infrastructure.Migrations
                     IdTipoCancha = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Superficie = table.Column<int>(type: "int", nullable: false),
+                    Superficie = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Capacidad = table.Column<int>(type: "int", nullable: false),
                     Duracion = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<int>(type: "int", nullable: false)
@@ -135,7 +125,7 @@ namespace Infrastructure.Migrations
                     Pais = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Correo = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    FechaNac = table.Column<DateTime>(type: "datetime", nullable: false),
+                    FechaNac = table.Column<DateOnly>(type: "date", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -149,38 +139,21 @@ namespace Infrastructure.Migrations
                 {
                     IdEquipo = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    IdCompetencia = table.Column<int>(type: "int", nullable: false),
                     Nombre = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Victorias = table.Column<int>(type: "int", nullable: false),
                     Derrotas = table.Column<int>(type: "int", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false),
-                    CompetenciaIdCompeticion = table.Column<int>(type: "int", nullable: true)
+                    CompetenciaIdCompetencia = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Equipo", x => x.IdEquipo);
                     table.ForeignKey(
-                        name: "FK_Equipo_Competencia_CompetenciaIdCompeticion",
-                        column: x => x.CompetenciaIdCompeticion,
+                        name: "FK_Equipo_Competencia_CompetenciaIdCompetencia",
+                        column: x => x.CompetenciaIdCompetencia,
                         principalTable: "Competencia",
-                        principalColumn: "IdCompeticion");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Torneo",
-                columns: table => new
-                {
-                    IdCompeticion = table.Column<int>(type: "int", nullable: false),
-                    FaseAct = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Torneo", x => x.IdCompeticion);
-                    table.ForeignKey(
-                        name: "FK_Torneo_Competencia_IdCompeticion",
-                        column: x => x.IdCompeticion,
-                        principalTable: "Competencia",
-                        principalColumn: "IdCompeticion",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdCompetencia");
                 });
 
             migrationBuilder.CreateTable(
@@ -189,8 +162,8 @@ namespace Infrastructure.Migrations
                 {
                     IdCancha = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     TipoCanchaId = table.Column<int>(type: "int", nullable: false),
-                    Disponibilidad = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Estado = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -244,7 +217,7 @@ namespace Infrastructure.Migrations
                         name: "FK_Partido_Competencia_IdCompetencia",
                         column: x => x.IdCompetencia,
                         principalTable: "Competencia",
-                        principalColumn: "IdCompeticion",
+                        principalColumn: "IdCompetencia",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Partido_Equipo_EquipoIdEquipo",
@@ -266,35 +239,25 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reserva",
+                name: "HorarioCancha",
                 columns: table => new
                 {
-                    IdReserva = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DniCliente = table.Column<int>(type: "int", nullable: false),
                     IdCancha = table.Column<int>(type: "int", nullable: false),
-                    IdDescuento = table.Column<int>(type: "int", nullable: true),
-                    FechaRes = table.Column<DateTime>(type: "datetime", nullable: false),
-                    HorarioInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    HorarioFin = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MontoTotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    EsValida = table.Column<bool>(type: "bit", nullable: false)
+                    Dia = table.Column<int>(type: "int", nullable: false),
+                    HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
+                    HoraFin = table.Column<TimeSpan>(type: "time", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reserva", x => x.IdReserva);
+                    table.PrimaryKey("PK_HorarioCancha", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reserva_Cancha_IdCancha",
+                        name: "FK_HorarioCancha_Cancha_IdCancha",
                         column: x => x.IdCancha,
                         principalTable: "Cancha",
                         principalColumn: "IdCancha",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reserva_Clientes_DniCliente",
-                        column: x => x.DniCliente,
-                        principalTable: "Clientes",
-                        principalColumn: "Dni",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -332,23 +295,39 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cobro",
+                name: "Reserva",
                 columns: table => new
                 {
-                    IdCobro = table.Column<int>(type: "int", nullable: false)
+                    IdReserva = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdReserva = table.Column<int>(type: "int", nullable: false),
-                    EstaCompleto = table.Column<bool>(type: "bit", nullable: false),
-                    MontoTotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                    DniCliente = table.Column<int>(type: "int", nullable: false),
+                    IdCancha = table.Column<int>(type: "int", nullable: false),
+                    IdCanchaHorario = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateOnly>(type: "date", nullable: false),
+                    IdDescuento = table.Column<int>(type: "int", nullable: true),
+                    MontoTotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    EsValida = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cobro", x => x.IdCobro);
+                    table.PrimaryKey("PK_Reserva", x => x.IdReserva);
                     table.ForeignKey(
-                        name: "FK_Cobro_Reserva_IdReserva",
-                        column: x => x.IdReserva,
-                        principalTable: "Reserva",
-                        principalColumn: "IdReserva",
+                        name: "FK_Reserva_Cancha_IdCancha",
+                        column: x => x.IdCancha,
+                        principalTable: "Cancha",
+                        principalColumn: "IdCancha",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reserva_Clientes_DniCliente",
+                        column: x => x.DniCliente,
+                        principalTable: "Clientes",
+                        principalColumn: "Dni",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Reserva_HorarioCancha_IdCanchaHorario",
+                        column: x => x.IdCanchaHorario,
+                        principalTable: "HorarioCancha",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -360,6 +339,8 @@ namespace Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DniEntrenador = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    Cupo = table.Column<int>(type: "int", nullable: false),
+                    IdActividad = table.Column<int>(type: "int", nullable: false),
                     EntrenadorDni = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -385,18 +366,96 @@ namespace Infrastructure.Migrations
                     IdClase = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Cupo = table.Column<int>(type: "int", nullable: false),
-                    IdProfesor = table.Column<int>(type: "int", nullable: false),
-                    Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                    DniProfesor = table.Column<int>(type: "int", nullable: false),
+                    Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    IdActividad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Clase", x => x.IdClase);
                     table.ForeignKey(
-                        name: "FK_Clase_Profesores_IdProfesor",
-                        column: x => x.IdProfesor,
+                        name: "FK_Clase_Profesores_DniProfesor",
+                        column: x => x.DniProfesor,
                         principalTable: "Profesores",
                         principalColumn: "Dni",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cobro",
+                columns: table => new
+                {
+                    IdCobro = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IdReserva = table.Column<int>(type: "int", nullable: false),
+                    EstaCompleto = table.Column<bool>(type: "bit", nullable: false),
+                    MontoTotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cobro", x => x.IdCobro);
+                    table.ForeignKey(
+                        name: "FK_Cobro_Reserva_IdReserva",
+                        column: x => x.IdReserva,
+                        principalTable: "Reserva",
+                        principalColumn: "IdReserva",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Inscripcion",
+                columns: table => new
+                {
+                    IdInscripcion = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DniCliente = table.Column<int>(type: "int", nullable: false),
+                    Horario = table.Column<DateTime>(type: "datetime", nullable: false),
+                    PrecioInscr = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
+                    NroAct = table.Column<int>(type: "int", nullable: false),
+                    IdAct = table.Column<int>(type: "int", nullable: false),
+                    IdCancha = table.Column<int>(type: "int", nullable: false),
+                    IdDescuento = table.Column<int>(type: "int", nullable: false),
+                    claseIdClase = table.Column<int>(type: "int", nullable: true),
+                    entrenamientoIdEntrenamiento = table.Column<int>(type: "int", nullable: true),
+                    competenciaIdCompetencia = table.Column<int>(type: "int", nullable: true),
+                    profesorDni = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Inscripcion", x => x.IdInscripcion);
+                    table.ForeignKey(
+                        name: "FK_Inscripcion_Cancha_IdCancha",
+                        column: x => x.IdCancha,
+                        principalTable: "Cancha",
+                        principalColumn: "IdCancha",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Inscripcion_Clase_claseIdClase",
+                        column: x => x.claseIdClase,
+                        principalTable: "Clase",
+                        principalColumn: "IdClase");
+                    table.ForeignKey(
+                        name: "FK_Inscripcion_Clientes_DniCliente",
+                        column: x => x.DniCliente,
+                        principalTable: "Clientes",
+                        principalColumn: "Dni",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Inscripcion_Competencia_competenciaIdCompetencia",
+                        column: x => x.competenciaIdCompetencia,
+                        principalTable: "Competencia",
+                        principalColumn: "IdCompetencia");
+                    table.ForeignKey(
+                        name: "FK_Inscripcion_Entrenamiento_entrenamientoIdEntrenamiento",
+                        column: x => x.entrenamientoIdEntrenamiento,
+                        principalTable: "Entrenamiento",
+                        principalColumn: "IdEntrenamiento");
+                    table.ForeignKey(
+                        name: "FK_Inscripcion_Profesores_profesorDni",
+                        column: x => x.profesorDni,
+                        principalTable: "Profesores",
+                        principalColumn: "Dni",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -427,71 +486,15 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Inscripcion",
-                columns: table => new
-                {
-                    IdInscripcion = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DniCliente = table.Column<int>(type: "int", nullable: false),
-                    Horario = table.Column<DateTime>(type: "datetime", nullable: false),
-                    PrecioInscr = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    NroAct = table.Column<int>(type: "int", nullable: false),
-                    IdAct = table.Column<int>(type: "int", nullable: false),
-                    IdCancha = table.Column<int>(type: "int", nullable: false),
-                    IdDescuento = table.Column<int>(type: "int", nullable: false),
-                    claseIdClase = table.Column<int>(type: "int", nullable: true),
-                    entrenamientoIdEntrenamiento = table.Column<int>(type: "int", nullable: true),
-                    competenciaIdCompeticion = table.Column<int>(type: "int", nullable: true),
-                    profesorDni = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Inscripcion", x => x.IdInscripcion);
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Cancha_IdCancha",
-                        column: x => x.IdCancha,
-                        principalTable: "Cancha",
-                        principalColumn: "IdCancha",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Clase_claseIdClase",
-                        column: x => x.claseIdClase,
-                        principalTable: "Clase",
-                        principalColumn: "IdClase");
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Clientes_DniCliente",
-                        column: x => x.DniCliente,
-                        principalTable: "Clientes",
-                        principalColumn: "Dni",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Competencia_competenciaIdCompeticion",
-                        column: x => x.competenciaIdCompeticion,
-                        principalTable: "Competencia",
-                        principalColumn: "IdCompeticion");
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Entrenamiento_entrenamientoIdEntrenamiento",
-                        column: x => x.entrenamientoIdEntrenamiento,
-                        principalTable: "Entrenamiento",
-                        principalColumn: "IdEntrenamiento");
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Profesores_profesorDni",
-                        column: x => x.profesorDni,
-                        principalTable: "Profesores",
-                        principalColumn: "Dni",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Cancha_TipoCanchaId",
                 table: "Cancha",
                 column: "TipoCanchaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Clase_IdProfesor",
+                name: "IX_Clase_DniProfesor",
                 table: "Clase",
-                column: "IdProfesor");
+                column: "DniProfesor");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cobro_IdReserva",
@@ -509,9 +512,14 @@ namespace Infrastructure.Migrations
                 column: "EntrenadorDni");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Equipo_CompetenciaIdCompeticion",
+                name: "IX_Equipo_CompetenciaIdCompetencia",
                 table: "Equipo",
-                column: "CompetenciaIdCompeticion");
+                column: "CompetenciaIdCompetencia");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HorarioCancha_IdCancha",
+                table: "HorarioCancha",
+                column: "IdCancha");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inscripcion_claseIdClase",
@@ -519,9 +527,9 @@ namespace Infrastructure.Migrations
                 column: "claseIdClase");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Inscripcion_competenciaIdCompeticion",
+                name: "IX_Inscripcion_competenciaIdCompetencia",
                 table: "Inscripcion",
-                column: "competenciaIdCompeticion");
+                column: "competenciaIdCompetencia");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Inscripcion_DniCliente",
@@ -582,6 +590,11 @@ namespace Infrastructure.Migrations
                 name: "IX_Reserva_IdCancha",
                 table: "Reserva",
                 column: "IdCancha");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reserva_IdCanchaHorario",
+                table: "Reserva",
+                column: "IdCanchaHorario");
         }
 
         /// <inheritdoc />
@@ -600,9 +613,6 @@ namespace Infrastructure.Migrations
                 name: "Inscripcion");
 
             migrationBuilder.DropTable(
-                name: "Ligas");
-
-            migrationBuilder.DropTable(
                 name: "Partido");
 
             migrationBuilder.DropTable(
@@ -610,9 +620,6 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reporte");
-
-            migrationBuilder.DropTable(
-                name: "Torneo");
 
             migrationBuilder.DropTable(
                 name: "Clase");
@@ -642,13 +649,16 @@ namespace Infrastructure.Migrations
                 name: "Profesional");
 
             migrationBuilder.DropTable(
-                name: "Cancha");
-
-            migrationBuilder.DropTable(
                 name: "Clientes");
 
             migrationBuilder.DropTable(
+                name: "HorarioCancha");
+
+            migrationBuilder.DropTable(
                 name: "Usuario");
+
+            migrationBuilder.DropTable(
+                name: "Cancha");
 
             migrationBuilder.DropTable(
                 name: "TipoCancha");
