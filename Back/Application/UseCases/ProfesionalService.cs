@@ -1,4 +1,6 @@
-﻿using Application.DTOs.Request.Profesional;
+﻿using Application.DTOs.Request.Cliente;
+using Application.DTOs.Request.Profesional;
+using Application.DTOs.Response;
 using Application.DTOs.Response.Profesional;
 using Application.Exceptions;
 using Application.Interfaces.Profesionales;
@@ -227,6 +229,52 @@ namespace Application.UseCases
             }
 
             throw new ExceptionBadRequest("El tipo de profesional no es válido.");
+        }
+
+        public async Task<ProfesionalLoginResponse> ProfesorLogin(LoginRequest request)
+        {
+            if (String.IsNullOrEmpty(request.Correo))
+            {
+                throw new ExceptionBadRequest("Complete el campo correo");
+            }
+            if (String.IsNullOrEmpty(request.Password))
+            {
+                throw new ExceptionBadRequest("Complete el campo contraseña");
+            }
+
+            var profesor = await _query.ProfesorLogin(request.Correo);
+
+           
+
+            return new ProfesionalLoginResponse
+            {
+                Dni = profesor.Dni,
+                Nombre = profesor.Nombre,
+                Correo = profesor.Correo,
+            };
+        }
+
+        public async Task<ProfesionalLoginResponse> EntrenadorLogin(LoginRequest request)
+        {
+            if (String.IsNullOrEmpty(request.Correo))
+            {
+                throw new ExceptionBadRequest("Complete el campo correo");
+            }
+            if (String.IsNullOrEmpty(request.Password))
+            {
+                throw new ExceptionBadRequest("Complete el campo contraseña");
+            }
+
+            var entrenador = await _query.EntrenadorLogin(request.Correo);
+
+           
+
+            return new ProfesionalLoginResponse
+            {
+                Dni = entrenador.Dni,
+                Nombre = entrenador.Nombre,
+                Correo = entrenador.Correo,
+            };
         }
     }
 }

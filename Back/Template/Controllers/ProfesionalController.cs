@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Request.Profesional;
+﻿using Application.DTOs.Request.Cliente;
+using Application.DTOs.Request.Profesional;
 using Application.Interfaces.Profesionales;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -118,6 +119,18 @@ namespace Template.Controllers
         {
             var resultado = await _profesionalService.VerificarCertificacion(dni, tipoProfesional, aprobado);
             return Ok(resultado);
+        }
+        [HttpPost("login/profesor")]
+        public async Task<IActionResult> ProfesorLogin([FromBody] LoginRequest request)
+        {
+            var response = await _profesionalService.ProfesorLogin(request);
+            return Ok(response);
+        }
+        [HttpPost("login/entrenador")]
+        public async Task<IActionResult> AdministradorLogin([FromBody] LoginRequest request)
+        {
+            var response = await _profesionalService.EntrenadorLogin(request);
+            return Ok(response);
         }
     }
 }

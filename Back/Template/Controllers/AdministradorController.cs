@@ -27,7 +27,7 @@ namespace Template.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> RegistrarAsistencia([FromBody] LoginRequest request)
+        public async Task<IActionResult> AdministradorLogin ([FromBody] LoginRequest request)
         {
             var response = await _service.Login(request);
             return Ok(response);

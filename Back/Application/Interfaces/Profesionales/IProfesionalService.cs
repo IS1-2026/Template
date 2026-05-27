@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Request.Profesional;
+﻿using Application.DTOs.Request.Cliente;
+using Application.DTOs.Request.Profesional;
 using Application.DTOs.Response.Profesional;
 using System;
 using System.Collections.Generic;
@@ -37,5 +38,8 @@ namespace Application.Interfaces.Profesionales
         // RF52: Verificar certificación deportiva
         Task<bool> VerificarCertificacion(int dni, string tipoProfesional, bool aprobado);
 
+        //Logins
+        Task<ProfesionalLoginResponse> ProfesorLogin(LoginRequest request);
+        Task<ProfesionalLoginResponse> EntrenadorLogin(LoginRequest request);
     }
 }
