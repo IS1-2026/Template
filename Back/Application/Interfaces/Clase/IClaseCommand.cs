@@ -14,5 +14,6 @@ namespace Application.Interfaces.Clase
         Task<Domain.Entities.Clase> ModificarClase(Domain.Entities.Clase Clase, CancellationToken ct = default);
         Task<Domain.Entities.Clase> EliminarClase(Domain.Entities.Clase Clase, CancellationToken ct = default);
         Task<Domain.Entities.Asistencia> PasarAsistencia(Domain.Entities.Clase Clase, CancellationToken ct = default);
+        Task<int> DecrementarCupo(int claseId,CancellationToken ct = default);
     }
 }

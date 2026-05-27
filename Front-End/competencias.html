@@ -1,11 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Competencias</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GolAhora | Competencias</title>
+
+  <link rel="stylesheet" href="./css/global/global.css" />
+  <link rel="stylesheet" href="./css/Forms/login.css"/>
+  <link rel="stylesheet" href="./css/Forms/registros.css"/>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/Competiciones/Competiciones.css" />
+  <link rel="stylesheet" href="./css/Competiciones/Cards.css" />
+  <script type="module" src="./main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
-    
+
+  <nav>
+    <a href="index.html" class="logo">Gol<span>Ahora</span></a>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="reservas.html">Mis Reservas</a></li>
+      <li><a href="competencias.html">Competencias</a></li>
+    </ul>
+
+    <div class="nav-btns" id="navBtns">
+      <a href="login.html" class="btn btn-outline">Ingresar</a>
+      <a href="registro.html" class="btn btn-solid">Registrarse</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <span class="hero-tag">Competí y jugá</span>
+
+    <h1>
+      TORNEOS y <span>LIGAS</span>
+    </h1>
+
+    <p>
+      Inscribite a competiciones abiertas, armá tu equipo y competí contra otros jugadores.
+    </p>
+  </section>
+
+  <section class="features">
+    <h2 class="section-title">Competiciones disponibles</h2>
+    <p class="section-sub">Elegí un torneo o liga para participar</p>
+
+    <div id="competitions-container" class="cards"></div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3>Gol<span>Ahora</span></h3>
+        <p>Competí, jugá y medite tu nivel en torneos locales.</p>
+      </div>
+
+      <div class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="canchas.html">Canchas</a>
+        <a href="reservas.html">Reservas</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 GolAhora · Todos los derechos reservados</p>
+    </div>
+  </footer>
+
 </body>
 </html>

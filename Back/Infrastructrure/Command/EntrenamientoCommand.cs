@@ -1,12 +1,7 @@
 ﻿using Application.Interfaces.Entrenamiento;
-using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure.Command
 {
@@ -40,6 +35,12 @@ namespace Infrastructure.Command
             return Entrenamiento;
         }
 
-
+        public async Task<int> DecrementarCupo(int entrenamientoId, CancellationToken ct = default)
+        {
+            var entrenamiento = await _context.Entrenamientos.FirstOrDefaultAsync(e => e.IdEntrenamiento  == entrenamientoId, ct);
+            entrenamiento.Cupo--;
+            await _context.SaveChangesAsync(ct);
+            return entrenamiento.Cupo;
+        }
     }
 }

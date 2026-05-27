@@ -3,12 +3,17 @@ import { crearTipoCancha } from "./js/TipoCancha/CrearTipoCancha.js/crearTipoCan
 import { actualizarNavbar } from "./js/Global/NavBar/ActNavbar.js";
 import { adminPanel } from "./js/Admin/admin.js";
 import { createReservaCard } from "./js/Reserva/Cards/CreateReservaCars.js";
+import { CreateCompetitionCards } from "./js/Competiciones/Cards/CreateCards.js";
+
 document.addEventListener("DOMContentLoaded", () => {
     actualizarNavbar();
   const page = window.location.pathname.split("/").pop();
 
   if (page === "canchas.html") {
     CreateCards();
+  }
+  if (page === "competencias.html") {
+    CreateCompetitionCards()
   }
   if (page === "admin.html") {
     adminPanel();

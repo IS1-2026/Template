@@ -18,9 +18,9 @@ namespace Template.Controllers
 
 
 
-        [HttpGet("dni/{dni}")]
-        public async Task<IActionResult> ConsultarInscripcion(int inscripcionId) {
-            var response = await _service.ConsultarInscripcion(inscripcionId);
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ConsultarInscripcion(int id) {
+            var response = await _service.ConsultarInscripcion(id);
             return Ok(response);
 
         }
@@ -29,36 +29,22 @@ namespace Template.Controllers
         public async Task<IActionResult> AgregarInscripcion([FromBody] AgregarInscripcionRequest request)
         {
             var response = await _service.AgregarInscripcion(request);
-            return CreatedAtAction(nameof(ConsultarInscripcion), new { IdInscripcion = response.IdInscripcion }, response);
+            return CreatedAtAction(nameof(ConsultarInscripcion), new { id = response.IdInscripcion }, response);
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarInscripcion(int claseId){
+        [HttpDelete("{inscripcionId}")]
+        public async Task<IActionResult> EliminarInscripcion(int inscripcionId)
+        {
 
-            var response = await _service.EliminarInscripcion(claseId);
+            var response = await _service.EliminarInscripcion(inscripcionId);
             return Ok(response);
         }
         
         [HttpGet]
         public async Task<IActionResult> ListaDeInscriptos() {
-
-
             var response = await _service.ListaDeInscriptos();
             return Ok(response);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

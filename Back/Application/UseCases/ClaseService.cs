@@ -171,17 +171,13 @@ namespace Application.UseCases
 
 
             return inscripciones.Select(inscripcion => new InscripcionResponse
-            {
-                
-
-              
+            {                              
                     IdInscripcion = inscripcion.IdInscripcion,
                     DniCliente= inscripcion.DniCliente,
                     Horario= inscripcion.Horario,
                     PrecioInscr = inscripcion.PrecioInscr,
                     NroAct= inscripcion.NroAct,
-                    IdAct=inscripcion.IdAct,
-                    IdCancha=inscripcion.IdCancha,
+                    IdAct=inscripcion.IdAct,                    
                     IdDescuento=inscripcion.IdDescuento                            
             }).ToList();
         }
@@ -194,15 +190,12 @@ namespace Application.UseCases
             return new InscripcionResponse
             {
 
-
-
                 IdInscripcion = inscripcion.IdInscripcion,
                 DniCliente = inscripcion.DniCliente,
                 Horario = inscripcion.Horario,
                 PrecioInscr = inscripcion.PrecioInscr,
                 NroAct = inscripcion.NroAct,
-                IdAct = inscripcion.IdAct,
-                IdCancha = inscripcion.IdCancha,
+                IdAct = inscripcion.IdAct,                
                 IdDescuento = inscripcion.IdDescuento
             };
 

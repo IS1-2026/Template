@@ -13,10 +13,7 @@ namespace Application.DTOs.Response.Inscripcion
         public DateTime Horario { get; set; }
         public double PrecioInscr { get; set; }
         public int NroAct { get; set; } //1- Entrenamiento,2- Clase, 3- Competición, etc
-
-
         public int IdAct { get; set; }
-        public int IdCancha { get; set; }
         public int IdDescuento { get; set; }
     }
 }

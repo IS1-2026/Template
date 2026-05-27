@@ -174,8 +174,7 @@ namespace Application.UseCases
             {
                 throw new ExceptionNotFound("Cliente no encontrado");
             }
-            var password = BCrypt.Net.BCrypt.HashPassword(request.Password);    
-            if(!BCrypt.Net.BCrypt.Verify(cliente.Password,password)) 
+            if(!BCrypt.Net.BCrypt.Verify(request.Password,cliente.Password)) 
             {
                 throw new ExceptionBadRequest("Credenciales invalidas");
             }

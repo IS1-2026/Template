@@ -1,0 +1,124 @@
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* CARD BASE */
+.card {
+  background: var(--color-bg, #1a1a1a);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+}
+
+.card:hover {
+  border-color: #4ade80;
+  transform: translateY(-4px);
+}
+
+/* TOP SECTION */
+.card-top {
+  padding: 1.25rem 1.25rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #14532d;
+  color: #4ade80;
+  padding: 3px 10px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+/* TITULO */
+.card h3 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* DESCRIPCIÓN */
+.info {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* CUPOS */
+.cupos {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.cupos::before {
+  content: "👥";
+  font-size: 12px;
+}
+
+/* PRECIO SECTION */
+.precio {
+  font-size: 22px;
+  font-weight: 800;
+  color: #4ade80;
+  margin-top: 6px;
+}
+
+/* FOOTER */
+.card-footer {
+  margin-top: auto;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* BOTÓN */
+.btn-inscribirse {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.btn-inscribirse:hover {
+  background: #15803d;
+}
+
+.btn-inscribirse:active {
+  transform: scale(0.97);
+}
+
+/* HOVER EFFECT GENERAL */
+.card:hover h3 {
+  color: #4ade80;
+}

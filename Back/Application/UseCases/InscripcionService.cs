@@ -1,22 +1,14 @@
 ﻿using Application.DTOs.Request.Inscripcion;
-using Application.DTOs.Response.Cancha;
-using Application.DTOs.Response.Clase;
 using Application.DTOs.Response.Inscripcion;
 using Application.Exceptions;
 using Application.Interfaces.Asistencia;
-using Application.Interfaces.Cancha;
 using Application.Interfaces.Clase;
+using Application.Interfaces.Competencias;
 using Application.Interfaces.Entrenamiento;
 using Application.Interfaces.Incripcion;
-using Application.Interfaces.Reserva;
+
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Application.UseCases
 {
@@ -28,6 +20,10 @@ namespace Application.UseCases
         private readonly IClaseQuery _claseQuery;
         private readonly IEntrenamientoQuery _entrenamientoQuery;
         private readonly IAsistenciaCommand _asistenciaCommand;
+        private readonly ICompetenciaQuery _competenciaQuery;
+        private readonly IEntrenamientoCommand _entrenamientoCommand;
+        private readonly ICompetenciaCommand _competenciaCommand;
+        private readonly IClaseCommand _claseCommand;
         
         
 
@@ -36,8 +32,11 @@ namespace Application.UseCases
             IInscripcionQuery inscripcionQuery,
             IClaseQuery claseQuery,
             IEntrenamientoQuery entrenamientoQuery,
-            IAsistenciaCommand asistenciaCommand
-            
+            IAsistenciaCommand asistenciaCommand,
+            ICompetenciaQuery competenciaQuery,
+            IEntrenamientoCommand entrenamientoCommand,
+            IClaseCommand claseCommand,
+            ICompetenciaCommand competenciaCommand
             )
         {
             _asistenciaCommand = asistenciaCommand;
@@ -45,6 +44,10 @@ namespace Application.UseCases
             _inscripcionQuery = inscripcionQuery;
             _claseQuery = claseQuery;
             _entrenamientoQuery = entrenamientoQuery;
+            _competenciaQuery = competenciaQuery;
+            _entrenamientoCommand = entrenamientoCommand;
+            _competenciaCommand = competenciaCommand;
+            _claseCommand = claseCommand;
         }
 
 
@@ -58,20 +61,15 @@ namespace Application.UseCases
                 DniCliente = inscripcion.DniCliente,
                 Horario = inscripcion.Horario,
                 PrecioInscr = inscripcion.PrecioInscr,
-                IdAct = inscripcion.IdAct,
-                IdCancha = inscripcion.IdCancha,
+                IdAct = inscripcion.IdAct,    
                 IdDescuento = inscripcion.IdDescuento,
                 NroAct = inscripcion.NroAct,
 
             };
-
-
-
-
         }
 
 
-        public async  Task<InscripcionResponse> AgregarInscripcion(AgregarInscripcionRequest request)
+        public async Task<InscripcionResponse> AgregarInscripcion(AgregarInscripcionRequest request)
         {
 
             if (request == null)
@@ -79,48 +77,92 @@ namespace Application.UseCases
                 throw new ExceptionBadRequest("Debe ingresar datos");
             }
 
-            if (request.DniCliente <= 0 & request.NroAct <= 0 & request.IdAct <=0 & request.PrecioInscr <= 0 & request.IdInscripcion <= 0)
+            if (request.DniCliente <= 0) 
             {
                 throw new ExceptionBadRequest("Ingrese valor valido");
-
-
             }
-            //Validamos disponibilidad
-            int Disponibilidad = await _inscripcionQuery.CuposEnNumeroActividad(request.IdAct, request.NroAct);
-
-            if (Disponibilidad == 0) {
-
-                throw new ExceptionBadRequest("No hay mas cupo,elija otra clase/entrenamiento");
+            if (request.IdAct <= 0)
+            {
+                throw new ExceptionBadRequest("Ingrese valor valido");
             }
+            if (request.NroAct <= 0)
+            {
+                throw new ExceptionBadRequest("Ingrese valor valido");
+            }
+        
 
-            
+            double precioInscr;
+            int cupoAct;
+
+            switch (request.NroAct)
+            {
+                case 1: // Entrenamiento
+                    var entrenamiento = await _entrenamientoQuery.ConsultarEntrenamiento(request.IdAct);
+                    if (entrenamiento == null) 
+                    {
+                        throw new ExceptionNotFound("No se encontró el entrenamiento");
+                    }
+                    precioInscr = entrenamiento.Precio;
+                    cupoAct = entrenamiento.Cupo;
+                    break;
+
+                case 2: // Clase
+                    var clase = await _claseQuery.ConsultarClase(request.IdAct);
+                    if (clase == null)
+                    {
+                        throw new ExceptionNotFound("No se encontró la clase");
+                    }
+                    precioInscr = clase.Precio;
+                    cupoAct=clase.Cupo;
+                    break;
+
+                case 3: // Competencia
+                    var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(request.IdAct);
+                    if (competencia == null)
+                    {
+                        throw new ExceptionNotFound("No se encontró la competencia");
+                    }
+                    precioInscr = competencia.Precio;
+                    cupoAct = competencia.Cupos;
+                    break;
+
+                default:
+                    throw new ExceptionBadRequest("Tipo de actividad inválido");
+            }                  
+                                
+
+            if (cupoAct == 0) {
+                throw new ExceptionConflict("No hay mas cupo,elija otra actividad");
+            }
+            switch (request.NroAct)
+            {
+                case 1: // Entrenamiento
+                    await _entrenamientoCommand.DecrementarCupo(request.IdAct);
+                    break;
+
+                case 2: // Clase
+                    await _claseCommand.DecrementarCupo(request.IdAct);
+                    break;
+
+                case 3: // Competencia
+                    await _competenciaCommand.DecrementarCupo(request.IdAct);
+                    break;
+
+                default:
+                    throw new ExceptionBadRequest("Tipo de actividad inválido");
+            }
 
 
             var inscripcion = new Inscripcion
             {
-                IdInscripcion = request.IdInscripcion,
                 DniCliente = request.DniCliente,
                 Horario = DateTime.Now, // o request.Horario si lo trae
-                PrecioInscr = request.PrecioInscr,
+                PrecioInscr = precioInscr,
                 IdAct = request.IdAct,
-                IdCancha = request.IdCancha,
-                IdDescuento = request.IdDescuento,
                 NroAct = request.NroAct
             };
-
-            
-            if (inscripcion.NroAct == 2)
-            {
-                var asistencia = new Asistencia {
-                   
-                   DniCliente = request.DniCliente,
-                   IdClase = request.NroAct,
-                    Presente = false
-               };
-                var asistenciaCreada = await _asistenciaCommand.RegistrarAsistencia(asistencia);
-            }
-
-
+                     
+       
 
             var InscripcionCreada = await _inscripcionCommand.AgregarInscripcion(inscripcion);
 
@@ -132,8 +174,7 @@ namespace Application.UseCases
                 Horario = InscripcionCreada.Horario, // o request.Horario si lo trae
                 PrecioInscr = InscripcionCreada.PrecioInscr,
                 IdAct = InscripcionCreada.IdAct,
-                IdCancha = InscripcionCreada.IdCancha,
-                IdDescuento = InscripcionCreada.IdDescuento,
+                IdDescuento = 2,
                 NroAct =InscripcionCreada.NroAct
 
             };
@@ -163,8 +204,6 @@ namespace Application.UseCases
                 IdInscripcion = inscripcionEliminada.IdInscripcion,
 
                 IdAct = inscripcionEliminada.IdAct,
-
-                IdCancha = inscripcionEliminada.IdCancha,
 
                 DniCliente = inscripcionEliminada.DniCliente,
 
@@ -199,11 +238,7 @@ namespace Application.UseCases
                 PrecioInscr = inscripcion.PrecioInscr,
                 NroAct = inscripcion.NroAct,
                 IdAct = inscripcion.IdAct,
-                IdCancha = inscripcion.IdCancha,
                 IdDescuento = inscripcion.IdDescuento
-
-
-
 
             }).ToList();
 

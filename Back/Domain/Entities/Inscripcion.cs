@@ -9,17 +9,15 @@ namespace Domain.Entities
         public double PrecioInscr { get; set; }
         public int NroAct { get; set; } //1- Entrenamiento,2- Clase, 3- Competición, etc
         public int IdAct { get; set; }
-        public int IdCancha { get; set; }
+
         public int IdDescuento { get; set; }
 
         //Relaciones
-
-        public Cancha cancha { get; set; }
         public Cliente cliente { get; set; }
         public Clase? clase { get; set; }
         public Entrenamiento? entrenamiento { get; set; }
         public Competencia? competencia { get; set; }
-        public Profesor profesor { get; set; }
+       
     }
 
 }

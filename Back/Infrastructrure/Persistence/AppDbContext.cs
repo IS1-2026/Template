@@ -434,11 +434,7 @@ namespace Infrastructure.Persistence
                     .HasForeignKey(i => i.DniCliente)
                     .HasPrincipalKey(c => c.Dni)
                     .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(i => i.cancha)
-                    .WithMany()
-                    .HasForeignKey(i => i.IdCancha)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    
             });
 
             // ASISTENCIA

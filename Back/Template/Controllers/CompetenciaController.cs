@@ -16,23 +16,29 @@ namespace Template.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CrearCompetencia([FromBody] CrearCompetenciaRequest request, CancellationToken ct)
+        public async Task<IActionResult> CrearCompetencia([FromBody] CrearCompetenciaRequest request)
         {
-            var response = await _service.CrearCompetencia(request, ct);
+            var response = await _service.CrearCompetencia(request);
             return CreatedAtAction(nameof(ConsultarCompetencia), new { IdCompetencia = response }, response);
         }
 
         [HttpGet("{IdCompetencia}")]
-        public async Task<IActionResult> ConsultarCompetencia(int IdCompetencia, CancellationToken ct)
+        public async Task<IActionResult> ConsultarCompetencia(int IdCompetencia)
         {
-            var response = await _service.ObtenerCompetenciaPorId(IdCompetencia, ct);
+            var response = await _service.ObtenerCompetenciaPorId(IdCompetencia);
+            return Ok(response);
+        }
+        [HttpGet]
+        public async Task<IActionResult> ConsultarCompetencias()
+        {
+            var response = await _service.ObtenerTodasLasCompetencias();
             return Ok(response);
         }
 
         [HttpPut("{CompetenciaId}")]
-        public async Task<IActionResult> ModificarCompetencia([FromBody] ModificarCompetenciaRequest request, CancellationToken ct)
+        public async Task<IActionResult> ModificarCompetencia([FromBody] ModificarCompetenciaRequest request)
         {
-            await _service.ModificarCompetencia(request, ct);
+            await _service.ModificarCompetencia(request);
             return NoContent();
         }
 

@@ -20,7 +20,7 @@ namespace Infrastructure.Query
 
         public async Task<List<Domain.Entities.Inscripcion>> ListaDeInscriptos(CancellationToken ct = default)
         {
-            return await _context.Inscripciones.ToListAsync(); // ✅ Async
+            return await _context.Inscripciones.ToListAsync(); 
         }
 
         public async Task<int> ContadorInscripcion(int idActividad, int nroActividad)

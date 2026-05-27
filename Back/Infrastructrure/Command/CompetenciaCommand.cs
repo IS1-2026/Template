@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Exceptions;
 using Application.Interfaces.Competencias;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -41,12 +42,20 @@ namespace Infrastructure.Command
          .AnyAsync(c => c.IdCompetencia == idcompetencia, ct);
 
             if (!competencia)
-                throw new Exception("Competencia no encontrada");
+                throw new ExceptionNotFound("Competencia no encontrada");
 
             equipo.IdCompetencia = idcompetencia;
             await _context.Equipos.AddAsync(equipo, ct);
             await _context.SaveChangesAsync(ct);
             return equipo.IdEquipo;
+        }
+
+        public async Task<int> DecrementarCupo(int competenciaId, CancellationToken ct = default)
+        {
+            var competencia = await _context.Competencias.FirstOrDefaultAsync(c => c.IdCompetencia == competenciaId, ct);
+            competencia.Cupos--;
+            await _context.SaveChangesAsync(ct);
+            return competencia.Cupos;
         }
     }
 }

@@ -7,6 +7,7 @@ using Application.DTOs.Request.Competencias;
 using Application.DTOs.Response.Competencias;
 using Application.DTOs.Response.Equipos;
 using Application.DTOs.Response.Partidos;
+using Application.Exceptions;
 using Application.Interfaces.Competencias;
 using Domain.Entities;
 
@@ -22,13 +23,13 @@ namespace Application.UseCases
             _competenciaQuery = competenciaQuery;
         }
 
-        public async Task<int> CrearCompetencia(CrearCompetenciaRequest request, CancellationToken ct = default)
+        public async Task<int> CrearCompetencia(CrearCompetenciaRequest request)
         {
             Competencia competencia = request.tipo switch
             {
                 "Liga" => new Liga(),
                 "Torneo" => new Torneo(),
-                _ => throw new ArgumentException("Formato invalido")
+                _ => throw new ExceptionBadRequest("Formato invalido")
             };
 
             competencia.Nombre = request.nombre;
@@ -36,13 +37,13 @@ namespace Application.UseCases
             competencia.Cupos = request.cupos;
             competencia.Precio = request.precio;
 
-            return await _competenciaCommand.CrearCompetencia(competencia, ct);
+            return await _competenciaCommand.CrearCompetencia(competencia);
 
         }
 
-        public async Task ModificarCompetencia(ModificarCompetenciaRequest request, CancellationToken ct = default)
+        public async Task ModificarCompetencia(ModificarCompetenciaRequest request)
         {
-            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(request.id, ct)
+            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(request.id)
                 ?? throw new KeyNotFoundException($"No se encontro competencias con id: {request.id}");
 
             competencia.Nombre = request.nombre ?? competencia.Nombre;
@@ -50,34 +51,36 @@ namespace Application.UseCases
             competencia.Cupos = request.cupos != 0 ? request.cupos : competencia.Cupos;
             competencia.Precio = request.precio != 0 ? request.precio : competencia.Precio;
 
-            await _competenciaCommand.ModificarCompetencia(competencia, ct);
+            await _competenciaCommand.ModificarCompetencia(competencia);
         }
 
-        public async Task<CompetenciaResponse?> ObtenerCompetenciaPorId(int id, CancellationToken ct = default)
+        public async Task<CompetenciaResponse?> ObtenerCompetenciaPorId(int id)
         {
-            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(id, ct);
+            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(id);
             if (competencia is null) return null;
 
             return new CompetenciaResponse
             {
+                CompetenciaId= competencia.IdCompetencia,
                 Nombre = competencia.Nombre,
                 Cupos = competencia.Cupos,
                 Descripcion = competencia.Descripcion,
-                Precio = competencia.Precio
+                Precio = competencia.Precio,
+                Tipo=competencia.GetType().Name
             };
         }
 
-        public async Task EliminarCompetencia(int idCompetencia, CancellationToken ct = default)
+        public async Task EliminarCompetencia(int idCompetencia)
         {
-            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(idCompetencia, ct)
+            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(idCompetencia)
                 ?? throw new KeyNotFoundException($"No se encontro competencias con id: {idCompetencia}");
 
-            await _competenciaCommand.EliminarCompetencia(competencia, ct);
+            await _competenciaCommand.EliminarCompetencia(competencia);
         }
 
-        public async Task<int> AgregarEquipo(AgregarEquipoRequest request,int idCompetencia, CancellationToken ct = default)
+        public async Task<int> AgregarEquipo(AgregarEquipoRequest request,int idCompetencia)
         {
-            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(idCompetencia, ct)
+            var competencia = await _competenciaQuery.ObtenerCompetenciaPorId(idCompetencia)
                  ?? throw new KeyNotFoundException($"No se encontro competencias con id: {idCompetencia}");
 
             if (competencia.Equipos.Count() >= competencia.Cupos)
@@ -95,27 +98,29 @@ namespace Application.UseCases
                 Nombre = request.nombre
             };
 
-            await _competenciaCommand.AgregarEquipo(equipo, idCompetencia, ct);
+            await _competenciaCommand.AgregarEquipo(equipo, idCompetencia);
             return equipo.IdEquipo;
         }
 
-        public async Task<IEnumerable<CompetenciaResponse?>> ObtenerTodasLasCompetencias(CancellationToken ct = default)
+        public async Task<IEnumerable<CompetenciaResponse?>> ObtenerTodasLasCompetencias()
         {
-            var lista = await _competenciaQuery.ObtenerTodasLasCompetencias(ct);
+            var lista = await _competenciaQuery.ObtenerTodasLasCompetencias();
             if (lista is null) return null;
 
             return lista.Select(c => new CompetenciaResponse
             {
+                CompetenciaId=c.IdCompetencia,
                 Nombre = c.Nombre,
                 Cupos = c.Cupos,
                 Descripcion = c.Descripcion,
-                Precio = c.Precio
+                Precio = c.Precio,
+                Tipo=c.GetType().Name,
             });
         }
 
-        public async Task<IEnumerable<EquipoResponse?>> ObtenerEquipos(int idcompetencia, CancellationToken ct = default)
+        public async Task<IEnumerable<EquipoResponse?>> ObtenerEquipos(int idcompetencia)
         {
-            var equipos = await _competenciaQuery.ObtenerEquipos(idcompetencia, ct);
+            var equipos = await _competenciaQuery.ObtenerEquipos(idcompetencia);
             return equipos.Select(e => new EquipoResponse
             {
                 id = e.IdEquipo,
@@ -125,9 +130,9 @@ namespace Application.UseCases
 
             });
         }
-        public async Task<IEnumerable<PartidoResponseCompetencia?>> ObtenerPartidos(int idcompetencia, CancellationToken ct = default)
+        public async Task<IEnumerable<PartidoResponseCompetencia?>> ObtenerPartidos(int idcompetencia)
         {
-            var partidos = await _competenciaQuery.ObtenerPartidos(idcompetencia, ct);
+            var partidos = await _competenciaQuery.ObtenerPartidos(idcompetencia);
             return partidos.Select(p => new PartidoResponseCompetencia
             {
                 resultado = p.Resultado,
@@ -137,9 +142,9 @@ namespace Application.UseCases
                 EquipoVis = p.EquipoVis.Nombre
             });
         }
-        public async Task<bool> CompetenciaExiste(int idcompetencia, CancellationToken ct = default)
+        public async Task<bool> CompetenciaExiste(int idcompetencia)
         {
-            return await _competenciaQuery.CompetenciaExiste(idcompetencia, ct);
+            return await _competenciaQuery.CompetenciaExiste(idcompetencia);
         }
     }
 }
