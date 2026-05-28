@@ -28,5 +28,13 @@ namespace Template.Controllers
             var result = await _service.ListarTipoCancha();
             return Ok(result);
         }
+
+        [HttpPut("{tipoCanchaId}")]
+        public async Task<IActionResult> ActualizarTipoCancha(int tipoCanchaId, [FromBody] ActualizarTipoCanchaRequest request)
+        {
+            var result = await _service.EditarTipoCancha(tipoCanchaId,request);
+            return Ok(result);
+        }
+
     }
 }

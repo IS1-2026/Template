@@ -13,17 +13,17 @@ export function RenderAdminEntrenamientoCards(entrenamientos) {
 
       ${entrenamientos.map(e => `
 
-        <div class="admin-card">
+        <div class="admin-card"data-id="${e.id_Entrenamiento}">
 
           <div class="admin-card-header">
 
             <div>
               <h3 class="admin-card-title">
-                Entrenamiento #${e.id_Entrenamiento}
+                ${e.nombre}
               </h3>
 
               <p class="admin-card-subtitle">
-                ${e.profesional?.nombre ?? ""} ${e.profesional?.apellido ?? ""}
+                Profesor: ${e.profesional?.nombre ?? ""} ${e.profesional?.apellido ?? ""}
               </p>
             </div>
 
@@ -60,13 +60,16 @@ export function RenderAdminEntrenamientoCards(entrenamientos) {
 
           <div class="admin-card-actions">
 
-            <button class="admin-btn admin-btn-edit">
-              Editar
+            <button class="admin-btn admin-btn-detalles">
+              Ver Detalles
             </button>
 
-            <button class="admin-btn admin-btn-delete">
-              Eliminar
-            </button>
+           <button 
+            class="admin-btn admin-btn-delete"
+            data-id="${e.id_Entrenamiento}"
+          >
+            Eliminar
+          </button>
 
           </div>
 

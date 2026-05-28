@@ -1,70 +1,78 @@
 export function RenderTcCards(tipos)
 {
+  if (!Array.isArray(tipos) || tipos.length === 0) {
+    return `
+      <p style="color: rgba(255,255,255,0.4)">
+        No hay tipos de cancha disponibles.
+      </p>
+    `;
+  }
+
   return `
   
-    <div class="admin-tipos-grid">
+    <div class="admin-clases-grid">
 
       ${tipos.map(tipo => `
 
-        <div class="tipo-card">
+        <div class="admin-card" data-id="${tipo.id}">
 
-          <div class="tipo-card-header">
+          <div class="admin-card-header">
 
-            <h3 class="tipo-card-title">
-              ${tipo.nombre}
-            </h3>
+            <div>
 
-            <span class="tipo-badge">
+              <h3 class="admin-card-title">
+                ${tipo.nombre}
+              </h3>
+
+              <p class="admin-card-subtitle">
+                ${tipo.superficie}
+              </p>
+
+            </div>
+
+            <span class="admin-badge">
               ID ${tipo.id}
             </span>
 
           </div>
 
-          <div class="tipo-card-info">
+          <div class="admin-card-info">
 
-            <div class="tipo-info-item">
+            <div class="admin-info-item">
 
-              <span class="tipo-info-label">
-                Superficie
-              </span>
-
-              <span class="tipo-info-value">
-                ${tipo.superficie}
-              </span>
-
-            </div>
-
-            <div class="tipo-info-item">
-
-              <span class="tipo-info-label">
+              <span class="admin-info-label">
                 Capacidad
               </span>
 
-              <span class="tipo-info-value">
+              <span class="admin-info-value">
                 ${tipo.capacidad} jugadores
               </span>
 
             </div>
 
-            <div class="tipo-info-item">
+            <div class="admin-info-item">
 
-              <span class="tipo-info-label">
+              <span class="admin-info-label">
                 Duración
               </span>
 
-              <span class="tipo-info-value">
+              <span class="admin-info-value">
                 ${tipo.duracion}h
               </span>
 
             </div>
 
-            <div class="tipo-info-item">
+          </div>
 
-              <span class="tipo-info-label">
-                Precio
+          <div class="admin-card-extra">
+
+            <div class="admin-professional-box">
+
+              <span>
+                Precio por turno
               </span>
 
-              <span class="tipo-info-value">
+              <span>
                 $${tipo.precio}
               </span>
 
@@ -72,13 +80,16 @@ export function RenderTcCards(tipos)
 
           </div>
 
-          <div class="tipo-card-footer">
+          <div class="admin-card-actions">
 
-            <button class="tipo-btn tipo-btn-edit">
+            <button class="admin-btn admin-btn-edit" data-id="${tipo.id}">
               Editar
             </button>
 
-            <button class="tipo-btn tipo-btn-delete">
+            <button 
+              class="admin-btn admin-btn-delete"
+              data-id="${tipo.id}"
+            >
               Eliminar
             </button>
 

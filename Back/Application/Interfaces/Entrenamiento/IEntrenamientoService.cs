@@ -15,6 +15,7 @@ namespace Application.Interfaces.Entrenamiento
 
         Task<EntrenamientoResponse> EliminarEntrenamiento(int entrenamientoId);
         Task<List<EntrenamientoFullResponse>> ListarEntrenamientos();
+        Task<List<EntrenamientoResponse>> ListarEntrenamientosPorDni(int entrenadorDni);
 
     }
 }

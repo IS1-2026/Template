@@ -11,79 +11,86 @@ export function RenderCompetitionAdminCards(competiciones)
 
   return `
 
-    <div class="admin-competencias-grid">
+    <div class="admin-clases-grid">
 
       ${competiciones.map(c => `
 
-        <div class="competencia-admin-card">
+        <div 
+          class="admin-card"
+          data-id="${c.competenciaId}"
+        >
 
-          <div class="competencia-admin-header">
+          <div class="admin-card-header">
 
             <div>
 
-              <span class="competencia-badge">
-                ${c.tipo ?? "Competencia"}
-              </span>
-
-              <h3 class="competencia-title">
+              <h3 class="admin-card-title">
                 ${c.nombre}
               </h3>
 
+              <p class="admin-card-subtitle">
+                ${c.tipo ?? "Competencia"}
+              </p>
+
             </div>
 
-            <span class="competencia-precio">
-              $${c.precio ?? 0}
+            <span class="admin-badge">
+              ${c.estado ? "Activa" : "Inactiva"}
             </span>
 
           </div>
 
-          <div class="competencia-body">
+          <div class="admin-card-info">
 
-            <p class="competencia-descripcion">
-              ${c.descripcion ?? "Sin descripción"}
-            </p>
+            <div class="admin-info-item">
 
-            <div class="competencia-info">
+              <span class="admin-info-label">
+                Cupos
+              </span>
 
-              <div class="competencia-info-item">
+              <span class="admin-info-value">
+                ${c.cupos ?? 0}
+              </span>
 
-                <span class="competencia-label">
-                  Cupos
-                </span>
+            </div>
 
-                <span class="competencia-value">
-                  ${c.cupos ?? 0}
-                </span>
+            <div class="admin-info-item">
 
-              </div>
+              <span class="admin-info-label">
+                Precio
+              </span>
 
-              <div class="competencia-info-item">
-
-                <span class="competencia-label">
-                  Estado
-                </span>
-
-                <span class="competencia-value">
-                  ${c.estado ? "Activa" : "Inactiva"}
-                </span>
-
-              </div>
+              <span class="admin-info-value">
+                $${c.precio ?? 0}
+              </span>
 
             </div>
 
           </div>
 
-          <div class="competencia-footer">
+          <div class="admin-card-extra">
+
+            <div class="admin-professional-box">
+
+              <span>
+                ${c.descripcion ?? "Sin descripción"}
+              </span>
+
+            </div>
+
+          </div>
+
+          <div class="admin-card-actions">
 
             <button 
-              class="competencia-btn competencia-btn-edit"
+              class="admin-btn admin-btn-edit"
               data-id="${c.competenciaId}"
             >
               Editar
             </button>
 
             <button 
-              class="competencia-btn competencia-btn-delete"
+              class="admin-btn admin-btn-delete"
               data-id="${c.competenciaId}"
             >
               Eliminar

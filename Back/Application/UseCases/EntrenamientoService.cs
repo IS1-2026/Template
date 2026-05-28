@@ -13,6 +13,7 @@ namespace Application.UseCases
         private readonly IEntrenamientoCommand _entrenamientoCommand;
         private readonly IEntrenamientoQuery _entrenamientoQuery;
         private readonly IProfesionalQuery _profesionalQuery;
+        
 
 
         public EntrenamientoService(
@@ -27,9 +28,6 @@ namespace Application.UseCases
             _profesionalQuery = profesionalQuery;
 
         }
-
-
-
         public async Task<EntrenamientoResponse> ModificarEntrenamiento(int entrenamientoId,ModificarEntrenamientoRequest request)
         {
             if (request == null)
@@ -146,8 +144,6 @@ namespace Application.UseCases
             };
 
         }
-
-
         public async Task<EntrenamientoResponse> ImprimirEntrenamiento(int entrenamientoId)
         {
             if (entrenamientoId <= 0)
@@ -200,7 +196,6 @@ namespace Application.UseCases
 
 
         }
-
         public async Task<List<EntrenamientoFullResponse>> ListarEntrenamientos()
         {
             var result = await _entrenamientoQuery.ListarEntrenamientos();
@@ -224,6 +219,23 @@ namespace Application.UseCases
                Precio=entrenamiento.Precio,
 
             }).ToList();
+        }
+
+        public async Task<List<EntrenamientoResponse>> ListarEntrenamientosPorDni(int entrenadorDni)
+        {
+            var entrenador = await _profesionalQuery.ObtenerEntrenadorPorId(entrenadorDni) ?? throw new ExceptionNotFound("El entrador no fue encontrado");
+
+            var entrenamientos = await _entrenamientoQuery.ListarEntrenamientosPorEntrenador(entrenador.Dni);
+
+            return entrenamientos.Select(entrenamiento => new EntrenamientoResponse
+            {
+                Nombre = entrenamiento.Nombre,
+                Id_Entrenamiento = entrenamiento.IdEntrenamiento,
+                Dni_Entrenador = entrenamiento.DniEntrenador,
+                Cupo = entrenamiento.Cupo,
+                Precio = entrenamiento.Precio
+            }).ToList();
+
         }
     }
 }

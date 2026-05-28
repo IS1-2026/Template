@@ -15,21 +15,21 @@ namespace Infrastructure.Command
 
         public async Task<Reserva> CrearReserva(Reserva Reserva, CancellationToken ct = default)
         {
-            await _context.AddAsync(Reserva, ct);
+            await _context.Reservas.AddAsync(Reserva, ct);
             await _context.SaveChangesAsync(ct);
             return Reserva;
         }
 
         public async Task<Reserva> EliminarReserva(Reserva Reserva, CancellationToken ct = default)
         {
-            _context.Remove(Reserva);
+            _context.Reservas.Remove(Reserva);
             await _context.SaveChangesAsync(ct);
             return Reserva;
         }
 
         public async Task<Reserva> ModificarReserva(Reserva Reserva, CancellationToken ct = default)
         {
-            _context.Update(Reserva);
+            _context.Reservas.Update(Reserva);
             await _context.SaveChangesAsync(ct);
             return Reserva;
         }

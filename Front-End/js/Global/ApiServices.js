@@ -46,6 +46,25 @@ export async function postData(endpointUrl, body) {
     }
 }
 
+export async function deleteData(endpointUrl)
+{
+    try
+    {
+       const response = await fetch(`${base_Url}${endpointUrl}`, {
+        method: "DELETE",
+        headers: {
+            "Accept": "application/json"
+        }
+        });
+        const data = await response.json();
+        return data;
+    }
+    catch(error)
+    {
+        throw new Error(error.message || "No se pudo conectar con el servidor");
+    }
+}
+
 export async function putData(endpointUrl, body) {
     try {
         const response = await fetch(`${base_Url}${endpointUrl}`, {
