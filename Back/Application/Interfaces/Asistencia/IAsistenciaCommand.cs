@@ -14,8 +14,6 @@ namespace Application.Interfaces.Asistencia
         Task<Domain.Entities.Asistencia> ModificarAsistencia(Domain.Entities.Asistencia Asistencia, CancellationToken ct = default);
         Task<Domain.Entities.Asistencia> RegistrarAsistencia(Domain.Entities.Asistencia Asistencia, CancellationToken ct = default);
 
-        Task<Domain.Entities.Administrador> PasarAsistencia(ModificarAsistenciaRequest request);
-
 
     }
 }

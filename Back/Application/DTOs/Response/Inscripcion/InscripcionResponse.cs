@@ -9,6 +9,8 @@ namespace Application.DTOs.Response.Inscripcion
     public class InscripcionResponse
     {
         public int IdInscripcion { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
         public int DniCliente { get; set; }
         public DateTime Horario { get; set; }
         public double PrecioInscr { get; set; }

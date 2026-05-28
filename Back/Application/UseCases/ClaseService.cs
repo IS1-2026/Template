@@ -6,6 +6,7 @@ using Application.DTOs.Response.Inscripcion;
 using Application.Exceptions;
 using Application.Interfaces.Asistencia;
 using Application.Interfaces.Clase;
+using Application.Interfaces.Cliente;
 using Application.Interfaces.Entrenamiento;
 using Application.Interfaces.Incripcion;
 using Application.Interfaces.Profesionales;
@@ -23,6 +24,7 @@ namespace Application.UseCases
         private readonly IAsistenciaCommand _asistenciaCommand;
         private readonly IAsistenciaQuery _asistenciaQuery;
         private readonly IProfesionalQuery _profesionalQuery;
+        private readonly IClienteQuery _clienteQuery;
 
         public ClaseService(
             IClaseCommand claseCommand,
@@ -30,7 +32,8 @@ namespace Application.UseCases
             IInscripcionQuery inscripcionQuery,
             IAsistenciaCommand asistenciaCommand,
             IAsistenciaQuery asistenciaQuery,
-            IProfesionalQuery profesionalQuery
+            IProfesionalQuery profesionalQuery,
+            IClienteQuery clienteQuery
             )
         {
             _asistenciaQuery = asistenciaQuery;
@@ -39,6 +42,7 @@ namespace Application.UseCases
             _claseQuery = claseQuery;
             _asistenciaCommand = asistenciaCommand;
             _profesionalQuery = profesionalQuery;
+            _clienteQuery = clienteQuery;
 
         }
 
@@ -222,9 +226,10 @@ namespace Application.UseCases
 
             return new InscripcionResponse
             {
-
                 IdInscripcion = inscripcion.IdInscripcion,
                 DniCliente = inscripcion.DniCliente,
+                Nombre = inscripcion.cliente.Nombre,
+                Apellido=inscripcion.cliente.Apellido,
                 Horario = inscripcion.Horario,
                 PrecioInscr = inscripcion.PrecioInscr,
                 NroAct = inscripcion.NroAct,
@@ -286,9 +291,63 @@ namespace Application.UseCases
             }).ToList();
         }
 
-        public async Task<AsistenciaResponse> RegistrarAsistencia(int claseId, RegistrarAsistenciaRequest request)
+        public async Task<List<AsistenciaResponse>> RegistrarAsistencia(int claseId,List<RegistrarAsistenciaRequest> requests)
         {
-            throw new NotImplementedException();
+            var clase = await _claseQuery.ConsultarClase(claseId) ?? throw new ExceptionNotFound("La clase no fue encontrada");
+
+            var respuestas = new List<AsistenciaResponse>();
+
+            foreach (var request in requests)
+            {
+                var cliente = await _clienteQuery.ConsultarCliente(request.DniCliente) ?? throw new ExceptionNotFound($"Cliente {request.DniCliente} no encontrado");
+
+                var estaInscripto = await _inscripcionQuery.EstaIncripto(claseId, cliente.Dni);
+
+                if (!estaInscripto)
+                {
+                 throw new ExceptionConflict($"El cliente {cliente.Dni} no está inscripto en esta clase");
+                }
+
+                var asistencia = new Asistencia
+                {
+                    DniCliente = request.DniCliente,
+                    IdClase = claseId,
+                    Presente = request.Presente,
+                };
+
+                var asistenciaCreada = await _asistenciaCommand.RegistrarAsistencia(asistencia);
+
+                respuestas.Add(new AsistenciaResponse
+                {
+                    IdAsistencia = asistenciaCreada.IdAsistencia,
+                    DniCliente = asistenciaCreada.DniCliente,
+                    IdClase = asistenciaCreada.IdClase,
+                    Presente = asistenciaCreada.Presente,
+                });
+            }
+
+            return respuestas;
+        }
+
+        public async Task<List<InscripcionResponse>> VerInscriptos(int claseId)
+        {
+            var clase = await _claseQuery.ConsultarClase(claseId); 
+                
+            var inscriptos = await _claseQuery.MostrarInscriptos(claseId);
+
+            return inscriptos.Select(inscripto => new InscripcionResponse
+            {
+
+                IdInscripcion = inscripto.IdInscripcion,
+                DniCliente = inscripto.DniCliente,
+                Nombre=inscripto.cliente.Nombre,
+                Apellido=inscripto.cliente.Apellido,
+                Horario = inscripto.Horario,
+                PrecioInscr = inscripto.PrecioInscr,
+                NroAct = inscripto.NroAct,
+                IdAct = inscripto.IdAct,
+                IdDescuento = inscripto.IdDescuento
+            }).ToList();
         }
     }
 }

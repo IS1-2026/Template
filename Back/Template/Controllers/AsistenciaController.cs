@@ -15,10 +15,10 @@ namespace Template.Controllers
             _service = service;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegistrarAsistencia([FromBody] RegistrarAsistenciaRequest request)
+        [HttpPost("clase/{id}")]
+        public async Task<IActionResult> RegistrarAsistencia([FromRoute]int claseId, [FromBody] RegistrarAsistenciaRequest request)
         {
-            var response = await _service.RegistrarAsistencia(request); 
+            var response = await _service.RegistrarAsistencia(claseId,request); 
             return CreatedAtAction(nameof(ConsultarAsistencia), new { id = response.IdAsistencia }, response);
         }
 

@@ -16,8 +16,9 @@ namespace Application.Interfaces.Clase
         Task<List<FullClaseResponse>> ListarClases();
         Task<InscripcionResponse> DevolverInscripto(int InscripcionId);
         Task<int> ContarCuposLibres(int idActividad, int IdClase);
-
-        Task<AsistenciaResponse> RegistrarAsistencia(int claseId,RegistrarAsistenciaRequest request);
+        Task<List<AsistenciaResponse>> RegistrarAsistencia(int claseId,List<RegistrarAsistenciaRequest> request);
+        Task<List<InscripcionResponse>> VerInscriptos(int claseId);
+        
             
     
     }

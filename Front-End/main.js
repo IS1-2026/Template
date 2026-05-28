@@ -1,9 +1,9 @@
 import { CreateCards } from "./js/Canchas/Cards/CreateCards.js";
-import { crearTipoCancha } from "./js/TipoCancha/CrearTipoCancha.js/crearTipoCancha.js";
 import { actualizarNavbar } from "./js/Global/NavBar/ActNavbar.js";
 import { adminPanel } from "./js/Admin/admin.js";
 import { createReservaCard } from "./js/Reserva/Cards/CreateReservaCars.js";
 import { CreateCompetitionCards } from "./js/Competiciones/Cards/CreateCards.js";
+import {CreateAllActivitiesCards} from "./js/Actividades/Cards/RenderActivities.js"
 
 document.addEventListener("DOMContentLoaded", () => {
     actualizarNavbar();
@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   if (page === "competencias.html") {
     CreateCompetitionCards()
+  }
+  if (page === "actividades.html") {
+    CreateAllActivitiesCards();
   }
   if (page === "admin.html") {
     adminPanel();

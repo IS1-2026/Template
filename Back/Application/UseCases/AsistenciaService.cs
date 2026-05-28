@@ -23,11 +23,11 @@ namespace Application.UseCases
           
         }
 
-        public async Task<AsistenciaResponse> RegistrarAsistencia(RegistrarAsistenciaRequest request)
+        public async Task<AsistenciaResponse> RegistrarAsistencia(int claseId,RegistrarAsistenciaRequest request)
         {
             var asistencia = new Asistencia
             {
-                IdClase=request.ClaseId,
+                IdClase=claseId,
                 DniCliente = request.DniCliente,
                 Presente = request.Presente
             };

@@ -1,7 +1,4 @@
-﻿
-using System.Runtime.InteropServices.Marshalling;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Entrenamiento
     {

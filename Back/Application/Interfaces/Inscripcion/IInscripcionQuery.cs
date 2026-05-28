@@ -17,9 +17,10 @@ namespace Application.Interfaces.Incripcion
         Task<int> ContadorInscripcion(int idActividad, int nroActividad);
 
         Task<int> CuposEnNumeroActividad(int idActividad, int nroActividad);
+        Task<bool> EstaIncripto(int idActividad, int dni,CancellationToken ct = default);
 
-        
 
-        
+
+
     }
 }

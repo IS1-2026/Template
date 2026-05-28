@@ -3,6 +3,7 @@ using Application.DTOs.Response.Inscripcion;
 using Application.Exceptions;
 using Application.Interfaces.Asistencia;
 using Application.Interfaces.Clase;
+using Application.Interfaces.Cliente;
 using Application.Interfaces.Competencias;
 using Application.Interfaces.Entrenamiento;
 using Application.Interfaces.Incripcion;
@@ -18,6 +19,7 @@ namespace Application.UseCases
         private readonly IInscripcionCommand _inscripcionCommand;
         private readonly IInscripcionQuery _inscripcionQuery;
         private readonly IClaseQuery _claseQuery;
+        private readonly IClienteQuery _clienteQuery;
         private readonly IEntrenamientoQuery _entrenamientoQuery;
         private readonly IAsistenciaCommand _asistenciaCommand;
         private readonly ICompetenciaQuery _competenciaQuery;
@@ -36,7 +38,8 @@ namespace Application.UseCases
             ICompetenciaQuery competenciaQuery,
             IEntrenamientoCommand entrenamientoCommand,
             IClaseCommand claseCommand,
-            ICompetenciaCommand competenciaCommand
+            ICompetenciaCommand competenciaCommand,
+            IClienteQuery clienteQuery
             )
         {
             _asistenciaCommand = asistenciaCommand;
@@ -48,6 +51,7 @@ namespace Application.UseCases
             _entrenamientoCommand = entrenamientoCommand;
             _competenciaCommand = competenciaCommand;
             _claseCommand = claseCommand;
+            _clienteQuery = clienteQuery;
         }
 
 
@@ -77,7 +81,7 @@ namespace Application.UseCases
                 throw new ExceptionBadRequest("Debe ingresar datos");
             }
 
-            if (request.DniCliente <= 0) 
+            if (request.DniCliente <= 0)
             {
                 throw new ExceptionBadRequest("Ingrese valor valido");
             }
@@ -89,7 +93,8 @@ namespace Application.UseCases
             {
                 throw new ExceptionBadRequest("Ingrese valor valido");
             }
-        
+
+            var cliente = await _clienteQuery.ConsultarCliente(request.DniCliente) ?? throw new ExceptionNotFound("Cliente no encontrado");
 
             double precioInscr;
             int cupoAct;
@@ -156,13 +161,12 @@ namespace Application.UseCases
             var inscripcion = new Inscripcion
             {
                 DniCliente = request.DniCliente,
-                Horario = DateTime.Now, // o request.Horario si lo trae
+                Horario = DateTime.Now, 
                 PrecioInscr = precioInscr,
                 IdAct = request.IdAct,
-                NroAct = request.NroAct
+                NroAct = request.NroAct //1 - ENTRENAMIENTO, 2 - CLASE, 3 - COMPETICIÓN
             };
-                     
-       
+                           
 
             var InscripcionCreada = await _inscripcionCommand.AgregarInscripcion(inscripcion);
 
@@ -171,6 +175,8 @@ namespace Application.UseCases
             {
                 IdInscripcion = InscripcionCreada.IdInscripcion,
                 DniCliente = InscripcionCreada.DniCliente,
+                Nombre = cliente.Nombre,
+                Apellido = cliente.Apellido,
                 Horario = InscripcionCreada.Horario, // o request.Horario si lo trae
                 PrecioInscr = InscripcionCreada.PrecioInscr,
                 IdAct = InscripcionCreada.IdAct,

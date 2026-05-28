@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Request.Clase;
+﻿using Application.DTOs.Request.Asistencia;
+using Application.DTOs.Request.Clase;
 using Application.Interfaces.Clase;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,18 @@ namespace Template.Controllers
         {
             var response = await _service.ProgramarClase(request);
             return CreatedAtAction(nameof(ConsultarClase), new { claseId = response.IdClase }, response);
+        }
+        [HttpPost("asistencia/{claseId}")]
+        public async Task<IActionResult> CrearAsistencia([FromRoute] int claseId,[FromBody] List<RegistrarAsistenciaRequest> request)
+        {
+            var response = await _service.RegistrarAsistencia(claseId,request);
+            return Ok(response);
+        }
+        [HttpGet("inscriptos/{claseId}")]
+        public async Task<IActionResult> VerInscriptos([FromRoute] int claseId)
+        {
+            var response = await _service.VerInscriptos(claseId);
+            return Ok(response);
         }
 
         [HttpPut("{id}")]

@@ -17,15 +17,15 @@ namespace Infrastructure.Query
         }
         public async Task<Domain.Entities.Clase> ConsultarClase(int Clase, CancellationToken ct = default) {
 
-            return  _context.Clases.FirstOrDefault(c => c.IdClase == Clase);
+            return await _context.Clases.Include(c=>c.Inscripto).ThenInclude(i => i.cliente).FirstOrDefaultAsync(c => c.IdClase == Clase,ct);
         }
-        public async Task<List<Domain.Entities.Clase>> MostrarInscriptos(CancellationToken ct = default) {
+        public async Task<List<Domain.Entities.Inscripcion>> MostrarInscriptos(int claseId,CancellationToken ct = default) {
 
-            return await  _context.Clases.ToListAsync(ct);
+            return await _context.Inscripciones.Include(i=>i.cliente).Where(i=>i.IdAct==claseId).ToListAsync(ct);
         }
 
         public async Task<Domain.Entities.Inscripcion> DevolverInscripto(int InscripcionId, CancellationToken ct = default) {
-            return _context.Inscripciones.FirstOrDefault(i => i.IdInscripcion == InscripcionId);
+            return await _context.Inscripciones.FirstOrDefaultAsync(i => i.IdInscripcion == InscripcionId,ct);
         }
 
         public async Task<List<Clase>> ListarClases(CancellationToken ct = default)
