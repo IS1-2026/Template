@@ -9,5 +9,7 @@ namespace Application.Interfaces.TipoCancha
     {
         Task<TipoCanchaResponse> CrearTipoCancha(CrearTipoCanchaRequest request);
         Task<List<TipoCanchaResponse>> ListarTipoCancha();
+
+        Task<TipoCanchaResponse> EditarTipoCancha(int tipoCanchaId,ActualizarTipoCanchaRequest request);
     }
 }

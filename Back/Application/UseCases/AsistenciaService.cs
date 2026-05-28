@@ -27,20 +27,19 @@ namespace Application.UseCases
         {
             var asistencia = new Asistencia
             {
-                IdAsistencia = request.IdAsistencia,
+                IdClase=request.ClaseId,
                 DniCliente = request.DniCliente,
-                IdClase = request.IdClase,
                 Presente = request.Presente
             };
 
-            await _asistenciaCommand.RegistrarAsistencia(asistencia);
+            var claseCreada = await _asistenciaCommand.RegistrarAsistencia(asistencia);
 
             return new AsistenciaResponse
             {
-                IdAsistencia = asistencia.IdAsistencia,
-                DniCliente = asistencia.DniCliente,
-                IdClase = asistencia.IdClase,
-                Presente = asistencia.Presente
+                IdAsistencia = claseCreada.IdAsistencia,
+                DniCliente = claseCreada.DniCliente,
+                IdClase = claseCreada.IdClase,
+                Presente = claseCreada.Presente
             };
         }
 
@@ -62,7 +61,7 @@ namespace Application.UseCases
                 Presente = asistenciaActualizada.Presente,
                 DniCliente = asistenciaActualizada.DniCliente,
                 IdClase = asistenciaActualizada.IdClase
-                            };
+            };
         }
 
         public async Task<AsistenciaResponse> EliminarAsitencia(int IdAsistencia) {

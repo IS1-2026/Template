@@ -212,6 +212,7 @@ export function crearCancha()
         const idTipoCancha=Number(modal.querySelector("#tipoCancha").value)
      
         const nombre = modal.querySelector("#nombreCancha").value;
+        
         await InsertarCancha(idTipoCancha,nombre,horarios);
 
              Swal.fire({

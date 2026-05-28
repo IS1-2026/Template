@@ -14,6 +14,13 @@ namespace Infrastructure.Command
             _context = context;
         }
 
+        public async Task<Domain.Entities.TipoCancha> ActualizarTipoCancha(Domain.Entities.TipoCancha TipoCancha, CancellationToken ct = default)
+        {
+             _context.TiposCancha.Update(TipoCancha);
+            await _context.SaveChangesAsync(ct);
+            return TipoCancha;
+        }
+
         public async Task<TipoCancha> CrearTipoCancha(TipoCancha TipoCancha, CancellationToken ct = default)
         {
             await _context.TiposCancha.AddAsync(TipoCancha, ct);

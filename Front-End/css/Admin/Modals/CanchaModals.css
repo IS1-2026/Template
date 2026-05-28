@@ -1,71 +1,118 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
+/* BODY LOCK */
 
 body.modal-open{
   overflow:hidden;
 }
 
+/* OVERLAY */
+
 .modal-overlay{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.75);
+
   display:flex;
   justify-content:center;
   align-items:center;
+
+  padding:20px;
+
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(6px);
+
   z-index:9999;
-  backdrop-filter:blur(4px);
+
+  animation:overlayFade .2s ease;
 }
 
+/* MODAL */
 
 .modal-content{
   width:100%;
-  max-width:500px;
-  background:#161616;
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:18px;
-  padding:24px;
-  animation:modalShow 0.2s ease;
+  max-width:540px;
+
+  background:linear-gradient(
+    180deg,
+    #111111 0%,
+    #181818 100%
+  );
+
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:24px;
+
+  padding:28px;
+
+  color:white;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.45);
+
+  animation:modalShow .22s ease;
 }
 
-@keyframes modalShow{
-  from{
-    opacity:0;
-    transform:translateY(10px) scale(0.98);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0) scale(1);
-  }
-}
-
+/* HEADER */
 
 .modal-header{
   display:flex;
   justify-content:space-between;
-  align-items:center;
-  margin-bottom:24px;
+  align-items:flex-start;
+
+  gap:16px;
+
+  margin-bottom:28px;
 }
 
 .modal-header h2{
+  font-size:1.8rem;
+  font-weight:800;
   color:white;
-  font-size:24px;
+  line-height:1.1;
 }
 
+.modal-subtitle{
+  margin-top:8px;
+
+  color:rgba(255,255,255,.55);
+  font-size:.95rem;
+}
+
+/* CLOSE */
+
 .modal-close{
-  background:none;
+  width:42px;
+  height:42px;
+
   border:none;
-  color:#bdbdbd;
-  font-size:22px;
+  border-radius:12px;
+
+  background:rgba(255,255,255,.05);
+
+  color:rgba(255,255,255,.72);
+
+  font-size:1rem;
   cursor:pointer;
+
+  transition:.2s ease;
 }
 
 .modal-close:hover{
-  color:white;
+  background:rgba(239,68,68,.14);
+  color:#ef4444;
+
+  transform:rotate(90deg);
 }
+
+/* FORM */
 
 .modal-form{
   display:flex;
   flex-direction:column;
-  gap:18px;
+  gap:20px;
 }
 
 .form-row{
@@ -81,59 +128,247 @@ body.modal-open{
 }
 
 .form-group label{
-  color:#d1d5db;
-  font-size:14px;
+  color:rgba(255,255,255,.72);
+
+  font-size:.88rem;
+  font-weight:600;
 }
 
+/* INPUTS */
+
 .form-group input,
-.form-group select{
-  background:#0f0f0f;
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:10px;
-  padding:12px;
+.form-group select,
+.form-group textarea{
+  width:100%;
+
+  background:#101010;
+
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+
+  padding:14px 15px;
+
   color:white;
+  font-size:.95rem;
+
   outline:none;
+
+  transition:
+    border-color .2s ease,
+    background .2s ease,
+    box-shadow .2s ease,
+    transform .15s ease;
+}
+
+.form-group textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder{
+  color:rgba(255,255,255,.3);
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover{
+  background:#161616;
 }
 
 .form-group input:focus,
-.form-group select:focus{
+.form-group select:focus,
+.form-group textarea:focus{
   border-color:#22c55e;
+
+  background:#181818;
+
+  box-shadow:
+    0 0 0 4px rgba(34,197,94,.12);
+
+  transform:translateY(-1px);
 }
 
+/* DATE */
 
+input[type="date"]{
+  color-scheme:dark;
+}
 
-.modal-btn{
+/* ACTIONS */
+
+.modal-actions{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  gap:14px;
+
   margin-top:10px;
-  width:100%;
+  padding-top:22px;
+
+  border-top:1px solid rgba(255,255,255,.06);
 }
 
+/* BUTTONS */
 
-.btn-delete-horario{
-  width:34px;
-  height:34px;
+.btn-secondary,
+.btn-save{
+  width:180px;
+  height:50px;
+
+  border:none;
+  border-radius:14px;
+
+  display:flex;
   align-items:center;
   justify-content:center;
-  border:none;
-  border-radius:10px;
 
-  background:#262626;
-  color:#fff;
+  font-size:.95rem;
+  font-weight:700;
 
   cursor:pointer;
+
+  transition:
+    transform .18s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+/* CANCEL */
+
+.btn-secondary{
+  background:#222;
+
+  border:1px solid rgba(255,255,255,.08);
+
+  color:white;
+}
+
+.btn-secondary:hover{
+  background:#2c2c2c;
+
+  transform:translateY(-2px);
+}
+
+/* SAVE */
+
+.btn-save{
+  background:linear-gradient(
+    135deg,
+    #22c55e 0%,
+    #16a34a 100%
+  );
+
+  color:white;
+
+  box-shadow:
+    0 10px 24px rgba(34,197,94,.22);
+}
+
+.btn-save:hover{
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 14px 32px rgba(34,197,94,.28);
+}
+
+.btn-save:active,
+.btn-secondary:active{
+  transform:scale(.98);
+}
+
+/* DELETE BUTTON */
+
+.btn-delete-horario{
+  width:38px;
+  height:38px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:none;
+  border-radius:12px;
+
+  background:#222;
+  border:1px solid rgba(255,255,255,.08);
+
+  color:white;
+
+  cursor:pointer;
+
   font-size:16px;
   font-weight:bold;
 
-  transition:0.2s ease;
-
-  border:1px solid rgba(255,255,255,0.08);
+  transition:.18s ease;
 }
 
 .btn-delete-horario:hover{
   background:#ef4444;
   border-color:#ef4444;
+
   transform:scale(1.05);
 }
 
 .btn-delete-horario:active{
-  transform:scale(0.95);
+  transform:scale(.95);
+}
+
+/* ANIMATIONS */
+
+@keyframes modalShow{
+  from{
+    opacity:0;
+    transform:translateY(12px) scale(.98);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@keyframes overlayFade{
+  from{
+    opacity:0;
+  }
+
+  to{
+    opacity:1;
+  }
+}
+
+/* RESPONSIVE */
+
+@media (max-width:640px){
+
+  .modal-overlay{
+    padding:14px;
+    align-items:flex-start;
+  }
+
+  .modal-content{
+    padding:22px;
+    border-radius:20px;
+
+    margin-top:20px;
+  }
+
+  .form-row{
+    grid-template-columns:1fr;
+  }
+
+  .modal-header h2{
+    font-size:1.5rem;
+  }
+
+  .modal-actions{
+    flex-direction:column-reverse;
+  }
+
+  .btn-secondary,
+  .btn-save{
+    width:100%;
+  }
 }

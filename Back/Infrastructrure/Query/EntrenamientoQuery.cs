@@ -2,11 +2,7 @@
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure.Query
 {
@@ -34,6 +30,11 @@ namespace Infrastructure.Query
         public async Task<List<Entrenamiento>> ListarEntrenamientos(CancellationToken ct = default)
         {
             return await _context.Entrenamientos.Include(e=>e.Entrenador).ToListAsync(ct);
+        }
+
+        public async Task<List<Entrenamiento>> ListarEntrenamientosPorEntrenador(int entrenadorDni, CancellationToken ct = default)
+        {
+            return await _context.Entrenamientos.Where(entrenamiento => entrenamiento.DniEntrenador == entrenadorDni).ToListAsync(ct);
         }
     }
 }

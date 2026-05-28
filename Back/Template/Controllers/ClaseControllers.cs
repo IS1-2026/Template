@@ -44,9 +44,9 @@ namespace Template.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarClase(int claseId)
+        public async Task<IActionResult> EliminarClase(int id)
         {
-            var response = await _service.EliminarClase(claseId);
+            var response = await _service.EliminarClase(id);
             return Ok(response);
         }
 

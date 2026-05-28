@@ -4,7 +4,7 @@ export function RenderAdminClasesCards(clases) {
 
       ${clases.map(c => `
 
-        <div class="admin-card">
+        <div class="admin-card" data-id="${c.idClase}">
 
           <div class="admin-card-header">
 
@@ -12,7 +12,7 @@ export function RenderAdminClasesCards(clases) {
               <h3 class="admin-card-title">${c.nombre}</h3>
 
               <p class="admin-card-subtitle">
-              ${c.profesional.dni}-${c.profesional.nombre} ${c.profesional.apellido}
+              Profesor: ${c.profesional.nombre} ${c.profesional.apellido}
               </p>
             </div>
 
@@ -47,11 +47,11 @@ export function RenderAdminClasesCards(clases) {
 
           <div class="admin-card-actions">
 
-            <button class="admin-btn admin-btn-edit">
-              Editar
+            <button class="admin-btn admin-btn-detalles">
+              Ver Detalles
             </button>
 
-            <button class="admin-btn admin-btn-delete">
+            <button class="admin-btn admin-btn-delete" data-id="${c.idClase}">
               Eliminar
             </button>
 

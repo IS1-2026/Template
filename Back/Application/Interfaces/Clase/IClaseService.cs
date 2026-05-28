@@ -1,4 +1,6 @@
-﻿using Application.DTOs.Request.Clase;
+﻿using Application.DTOs.Request.Asistencia;
+using Application.DTOs.Request.Clase;
+using Application.DTOs.Response.Asistencia;
 using Application.DTOs.Response.Clase;
 using Application.DTOs.Response.Inscripcion;
 
@@ -14,6 +16,8 @@ namespace Application.Interfaces.Clase
         Task<List<FullClaseResponse>> ListarClases();
         Task<InscripcionResponse> DevolverInscripto(int InscripcionId);
         Task<int> ContarCuposLibres(int idActividad, int IdClase);
+
+        Task<AsistenciaResponse> RegistrarAsistencia(int claseId,RegistrarAsistenciaRequest request);
             
     
     }

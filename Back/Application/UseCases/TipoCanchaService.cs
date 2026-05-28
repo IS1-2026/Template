@@ -4,6 +4,7 @@ using Application.DTOs.Response.TipoCancha;
 using Application.Exceptions;
 using Application.Interfaces.TipoCancha;
 using Domain.Entities;
+using System.Data;
 
 namespace Application.UseCases
 {
@@ -64,6 +65,41 @@ namespace Application.UseCases
                 Capacidad = tipoCanchaCreada.Capacidad,
                 Precio = tipoCanchaCreada.Precio,
                 Duracion = tipoCanchaCreada.Duracion,
+            };
+        }
+
+        public async Task<TipoCanchaResponse> EditarTipoCancha(int tipoCanchaId,ActualizarTipoCanchaRequest request)
+        {
+            var tipoCancha = await _query.ObtenerTipoCancha(tipoCanchaId) ?? throw new ExceptionNotFound("Tipo cancha no encontrado");
+
+            if (request.Capacidad <= 0)
+            {
+                throw new ExceptionBadRequest("Ingrese una capacidad valido");
+            }
+            if (request.Precio <= 0)
+            {
+                throw new ExceptionBadRequest("Ingrese un precio valido");
+            }
+            if (request.Duracion <= 0)
+            {
+                throw new ExceptionBadRequest("Ingrese una duración valido");
+            }
+
+            tipoCancha.Nombre = request.Nombre ?? tipoCancha.Nombre;
+            tipoCancha.Duracion = request.Duracion ?? tipoCancha.Duracion;
+            tipoCancha.Capacidad = request.Capacidad ?? tipoCancha.Capacidad;
+            tipoCancha.Superficie = request.Superficie ?? tipoCancha.Superficie;
+            tipoCancha.Precio = request.Precio ?? tipoCancha.Precio;
+            var tipoCanchaAct = await _command.ActualizarTipoCancha(tipoCancha);
+
+            return new TipoCanchaResponse
+            {
+                Id = tipoCanchaAct.IdTipoCancha,
+                Nombre = tipoCanchaAct.Nombre,
+                Superficie = tipoCanchaAct.Superficie,
+                Capacidad = tipoCanchaAct.Capacidad,
+                Precio = tipoCanchaAct.Precio,
+                Duracion = tipoCanchaAct.Duracion,
             };
         }
 

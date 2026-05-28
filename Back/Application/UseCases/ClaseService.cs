@@ -18,8 +18,7 @@ namespace Application.UseCases
     {
 
         private readonly IClaseCommand _claseCommand;
-        private readonly IClaseQuery _claseQuery;
-       
+        private readonly IClaseQuery _claseQuery;       
         private readonly IInscripcionQuery _inscripcionQuery;
         private readonly IAsistenciaCommand _asistenciaCommand;
         private readonly IAsistenciaQuery _asistenciaQuery;
@@ -46,8 +45,6 @@ namespace Application.UseCases
 
         public async Task<ClaseResponse> ProgramarClase(ProgramarClasesRequest request)
         {
-
-
             if (request == null)
             {
                 throw new ExceptionBadRequest("Debe ingresar datos");
@@ -67,6 +64,10 @@ namespace Application.UseCases
                 throw new ExceptionBadRequest("El precio es invalido");
 
             }
+            if (request.Dia == DateOnly.FromDateTime(DateTime.Now))
+            {
+                throw new ExceptionBadRequest("Ingrese una fecha valida");
+            }
 
             var profesor = await _profesionalQuery.ObtenerProfesorPorId(request.DniProfesor);
             if (profesor == null) 
@@ -79,6 +80,8 @@ namespace Application.UseCases
                 DniProfesor = request.DniProfesor,
                 Nombre=request.Nombre,
                 Cupo = request.Cupo,
+                Dia = request.Dia,
+                Horario=request.Hora,
                 Precio = request.Precio,
                 IdActividad = 2,
                 Profesor=profesor
@@ -91,6 +94,8 @@ namespace Application.UseCases
                 Nombre= claseProgramada.Nombre,
                 DniProfesor = claseProgramada.DniProfesor,
                 Cupo = claseProgramada.Cupo,
+                Fecha=claseProgramada.Dia,
+                Hora=claseProgramada.Horario,
                 IdClase = claseProgramada.IdClase,
                 Precio = claseProgramada.Precio,                
             };
@@ -98,8 +103,6 @@ namespace Application.UseCases
         }
 
         public async Task<ClaseResponse> ModificarClase(int claseId, ModificarClaseRequest request) {
-
-
             if (request == null)
             {
                 throw new ExceptionBadRequest("Debe ingresar datos");
@@ -122,10 +125,16 @@ namespace Application.UseCases
             {
                 throw new ExceptionNotFound("Clase no encontrada");
             }
+            if (request.Fecha == DateOnly.FromDateTime(DateTime.Now))
+            {
+                throw new ExceptionBadRequest("Ingrese una fecha valida");
+            }
             clase.Nombre = request.Nombre ?? clase.Nombre;
             clase.DniProfesor = (int)request.DniProfesor;
             clase.Precio = (int)request.Precio;
             clase.Cupo = (int)request.Cupo;
+            clase.Dia = (DateOnly)request.Fecha;
+            clase.Horario = (TimeSpan)request.Hora;
             
             var ClaseModificada = await _claseCommand.ModificarClase(clase);
 
@@ -136,6 +145,8 @@ namespace Application.UseCases
                 DniProfesor = ClaseModificada.DniProfesor,
                 Precio = ClaseModificada.Precio,
                 Cupo = ClaseModificada.Cupo,
+                Fecha = ClaseModificada.Dia,
+                Hora = ClaseModificada.Horario, 
               
             };
         }
@@ -150,12 +161,13 @@ namespace Application.UseCases
                 DniProfesor = clase.DniProfesor,
                 IdClase = clase.IdClase,
                 Cupo = clase.Cupo,
+                Fecha=clase.Dia,
+                Hora = clase.Horario,
                 Precio = clase.Precio,
             
             };
      }     
-     
-        
+            
         public async Task<ClaseResponse> EliminarClase(int claseId) {
 
 
@@ -176,10 +188,12 @@ namespace Application.UseCases
             return new ClaseResponse
             { 
                 Nombre = claseEliminada.Nombre,
-                  IdClase = claseEliminada.IdClase,
-                  Cupo = claseEliminada.Cupo,
-                  DniProfesor = claseEliminada.DniProfesor,
-                  Precio= claseEliminada.Precio
+                IdClase = claseEliminada.IdClase,
+                Cupo = claseEliminada.Cupo,
+                Fecha = claseEliminada.Dia,
+                Hora = claseEliminada.Horario,
+                DniProfesor = claseEliminada.DniProfesor,
+                Precio= claseEliminada.Precio
               };
 
 
@@ -239,32 +253,7 @@ namespace Application.UseCases
             // 5. Evitar negativos
             return cuposLibres;
         }
-
-        public async Task<AsistenciaResponse> PasarAsistencia(ModificarAsistenciaRequest request)
-        {
-            var asistencia = await _asistenciaQuery.ConsultarAsistencia(request.IdAsistencia);
-
-            if (asistencia == null)
-            {
-                throw new ExceptionBadRequest("la Asistencia no existe");
-            }
-            asistencia.Presente = request.Presente;
-
-            var AsistenciaTomada = await _asistenciaCommand.ModificarAsistencia(asistencia);
-
-            return new AsistenciaResponse
-            {
-                IdAsistencia = asistencia.IdAsistencia,
-                Presente = asistencia.Presente,
-                DniCliente = asistencia.DniCliente,
-                IdClase = asistencia.IdClase,
-
-
-
-            };
-
-        }
-
+             
         public async Task<List<FullClaseResponse>> ListarClases()
         {
             var clases = await _claseQuery.ListarClases();
@@ -275,7 +264,8 @@ namespace Application.UseCases
                 IdClase = c.IdClase,
 
                 Cupo = c.Cupo,
-
+                Fecha = c.Dia,
+                Hora = c.Horario,
                 Profesional = new DTOs.Response.Profesional.ProfesionalResponse
                 {
                     Dni = c.Profesor.Dni,
@@ -294,6 +284,11 @@ namespace Application.UseCases
                 NroActividad = c.IdActividad
 
             }).ToList();
+        }
+
+        public async Task<AsistenciaResponse> RegistrarAsistencia(int claseId, RegistrarAsistenciaRequest request)
+        {
+            throw new NotImplementedException();
         }
     }
 }

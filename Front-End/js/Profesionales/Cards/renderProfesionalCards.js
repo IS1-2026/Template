@@ -9,62 +9,87 @@ export function RenderProfesionalCards(profesionales, tipo) {
   }
 
   return `
-    <div class="profesionales-grid">
+    <div class="admin-clases-grid">
 
       ${profesionales.map(p => `
 
-        <div class="profesional-card">
+        <div class="admin-card" data-id="${p.dni}">
 
-          <div class="profesional-card-top">
+          <div class="admin-card-header">
 
-            <div class="profesional-header">
+            <div>
 
-              <div>
+              <h3 class="admin-card-title">
+                ${p.nombre} ${p.apellido ?? ""}
+              </h3>
 
-                <span class="profesional-badge">
-                  ${tipo}
-                </span>
-
-                <h3 class="profesional-nombre">
-                  ${p.nombre}
-                </h3>
-
-                <p class="profesional-apellido">
-                  ${p.apellido ?? ""}
-                </p>
-
-              </div>
+              <p class="admin-card-subtitle">
+                ${tipo}
+              </p>
 
             </div>
 
-            <div class="profesional-meta">
+            <span class="admin-badge">
+              ${p.estado ? "Activo" : "Inactivo"}
+            </span>
 
-              <span class="meta-pill">
-                ${p.localidad ?? "-"}
+          </div>
+
+          <div class="admin-card-info">
+
+            <div class="admin-info-item">
+
+              <span class="admin-info-label">
+                DNI
               </span>
 
-              <span class="meta-pill">
-                ${p.pais ?? "-"}
+              <span class="admin-info-value">
+                ${p.dni}
               </span>
 
-              <span class="meta-pill">
-                ${p.correo ?? "-"}
+            </div>
+
+            <div class="admin-info-item">
+
+              <span class="admin-info-label">
+                Certificado
+              </span>
+
+              <span class="admin-info-value">
+                ${p.estaCertificado ? "Sí" : "No"}
               </span>
 
             </div>
 
           </div>
 
-          <div class="profesional-footer">
+          <div class="admin-card-extra">
 
-            <span class="${p.estado ? "estado-activo" : "estado-inactivo"}">
+            <div class="admin-professional-box">
 
-              ${p.estado ? "Activo" : "Inactivo"}
+              <span>
+                ${p.correo ?? "-"}
+              </span>
 
-            </span>
+              <span>
+                ${p.localidad ?? "-"} - ${p.pais ?? "-"}
+              </span>
 
-            <button class="btn-contactar">
+            </div>
+
+          </div>
+
+          <div class="admin-card-actions">
+
+            <button class="admin-btn admin-btn-detalles">
               Ver perfil
+            </button>
+
+            <button 
+              class="admin-btn admin-btn-delete"
+              data-id="${p.dni}"
+            >
+              Eliminar
             </button>
 
           </div>

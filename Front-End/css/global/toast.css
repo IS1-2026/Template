@@ -134,3 +134,74 @@
   border-color:#22c55e !important;
   box-shadow:none !important;
 }
+
+
+.swal-golahora-popup {
+
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.35);
+
+  padding: 1.8rem;
+}
+
+.swal-golahora-title {
+
+  font-size: 1.4rem;
+  font-weight: 700;
+
+  color: white;
+}
+
+.swal-golahora-text {
+
+  color: rgba(255,255,255,0.7);
+
+  font-size: 0.95rem;
+}
+
+.swal-golahora-confirm {
+
+  background: #ef4444 !important;
+
+  border: none !important;
+
+  border-radius: 12px !important;
+
+  padding: 10px 18px !important;
+
+  font-weight: 600 !important;
+
+  transition: 0.2s ease;
+}
+
+.swal-golahora-confirm:hover {
+
+  background: #dc2626 !important;
+
+  transform: translateY(-1px);
+}
+
+.swal-golahora-cancel {
+
+  background: #2a2a2a !important;
+
+  color: white !important;
+
+  border: 1px solid rgba(255,255,255,0.08) !important;
+
+  border-radius: 12px !important;
+
+  padding: 10px 18px !important;
+
+  font-weight: 600 !important;
+
+  transition: 0.2s ease;
+}
+
+.swal-golahora-cancel:hover {
+
+  background: #333 !important;
+}

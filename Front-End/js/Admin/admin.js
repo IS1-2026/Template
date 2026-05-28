@@ -4,6 +4,7 @@ import { RenderAdminCards } from "./renderAdminCards.js";
 import { RenderTcCards } from "./renderTcCards.js";
 import { crearCancha } from "./Modals/crearCancha.js";
 import { editarCancha } from "./Modals/editarCancha.js";
+import { editarTipoCancha } from "./Modals/editarTipoCancha.js";
 import { getProfesionales } from "../Profesionales/getProfesionales.js";
 import { RenderProfesionalCards } from "../Profesionales/Cards/renderProfesionalCards.js";
 import { abrirModalCrearProfesional } from "./Modals/crearProfesional.js  ";
@@ -15,6 +16,12 @@ import { getEntrenamientos } from "../Actividades/GetEntrenamientos.js";
 import { getClases } from "../Actividades/GetClases.js";
 import { RenderAdminClasesCards } from "./renderClases.js";
 import { RenderAdminEntrenamientoCards } from "./renderEntrenamientos.js";
+import { crearEntrenamiento } from "./Modals/crearEntrenamiento.js";
+import { eliminarEntrenamiento } from "./eliminarEntrenamiento.js";
+import { crearClase } from "./Modals/crearClases.js";
+import { eliminarClase } from "./eliminarClase.js";
+import { eliminarCancha } from "./eliminarCancha.js";
+import { eliminarProfesional } from "./eliminarProfesional.js";
 
 
 
@@ -39,7 +46,13 @@ botones.forEach((boton, index) => {
     const seccionAct = boton.textContent.trim();;
 
 
-  if (seccionAct == "Canchas")
+
+ if(seccionAct == "Dashboard")
+  {
+        console.log("AAAA")
+  }
+
+ if (seccionAct == "Canchas")
   {
   const canchas = await getCanchas();
 
@@ -68,9 +81,60 @@ botones.forEach((boton, index) => {
       });
 
     });
+    document.querySelectorAll(".admin-btn-delete")
+  .forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      const id = Number(btn.dataset.id);
+      const result = await Swal.fire({
+
+      title: "¿Eliminar cancha?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+
+      reverseButtons: true,
+
+      background: "#1e1e1e",
+      color: "#f5f5f5",
+
+      customClass: {
+
+        popup: "swal-golahora-popup",
+
+        title: "swal-golahora-title",
+
+        htmlContainer: "swal-golahora-text",
+
+        confirmButton: "swal-golahora-confirm",
+
+        cancelButton: "swal-golahora-cancel"
+
+      }
+
+    });
+
+      if (!result.isConfirmed) return;
+
+        await eliminarCancha(id);
+      const card = document.querySelector(
+          `.admin-card[data-id="${id}"]`
+        );
+        card.remove();
+
+    });
+
+  });    
+
+
 }
 
-    if(seccionAct == "Tipo de canchas")
+ if(seccionAct == "Tipo de canchas")
 {
     const tipos = await getTipoCanchas();
 
@@ -96,13 +160,74 @@ botones.forEach((boton, index) => {
     container
       .querySelector("#btn-crear-tipo-cancha")
       .addEventListener("click", () => {
-     
         crearTipoCancha();
-
       });
+
+   container.querySelectorAll(".admin-btn-edit")
+    .forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = Number(btn.dataset.id);
+        const tipoCancha = tipos.find(tc => tc.id === id);
+        if (tipoCancha) {
+          editarTipoCancha(tipoCancha);
+        }
+      });
+
+    });
+    document.querySelectorAll(".admin-btn-delete")
+  .forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      const id = Number(btn.dataset.id);
+      const result = await Swal.fire({
+
+      title: "¿Eliminar tipo de cancha?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+
+      reverseButtons: true,
+
+      background: "#1e1e1e",
+      color: "#f5f5f5",
+
+      customClass: {
+
+        popup: "swal-golahora-popup",
+
+        title: "swal-golahora-title",
+
+        htmlContainer: "swal-golahora-text",
+
+        confirmButton: "swal-golahora-confirm",
+
+        cancelButton: "swal-golahora-cancel"
+
+      }
+
+    });
+
+      if (!result.isConfirmed) return;
+
+        await eliminarCancha(id);
+      const card = document.querySelector(
+          `.admin-card[data-id="${id}"]`
+        );
+        card.remove();
+
+    });
+
+  });    
+
+
 }
    
-   if (seccionAct == "Profesionales") {
+ if (seccionAct == "Profesionales") {
 
   const container = document.querySelector("#profesionales");
 
@@ -169,13 +294,59 @@ botones.forEach((boton, index) => {
     abrirModalCrearProfesional(tipoSeleccionado);
 
   });
-}
 
+   document.querySelectorAll(".admin-btn-delete")
+  .forEach(btn => {
 
-    if(seccionAct =="Dashboard")
-      {
-        console.log("AAAA")
+    btn.addEventListener("click", async () => {
+
+      const id = Number(btn.dataset.id);
+      const result = await Swal.fire({
+
+      title: "¿Eliminar profesional?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+
+      reverseButtons: true,
+
+      background: "#1e1e1e",
+      color: "#f5f5f5",
+
+      customClass: {
+
+        popup: "swal-golahora-popup",
+
+        title: "swal-golahora-title",
+
+        htmlContainer: "swal-golahora-text",
+
+        confirmButton: "swal-golahora-confirm",
+
+        cancelButton: "swal-golahora-cancel"
+
       }
+
+    });
+
+      if (!result.isConfirmed) return;
+
+        await eliminarProfesional(id);
+      const card = document.querySelector(
+          `.admin-card[data-id="${id}"]`
+        );
+        card.remove();
+
+    });
+
+  });  
+
+
+}
 
  if(seccionAct == "Competencias")
  {
@@ -233,7 +404,61 @@ botones.forEach((boton, index) => {
 
      document.querySelector("#clases-container").innerHTML =
       RenderAdminClasesCards(clases);
-  }
+    
+    document.querySelector("#btn-crear-clase").addEventListener('click',()=>
+    {
+      crearClase();
+    })
+
+     document.querySelectorAll(".admin-btn-delete")
+  .forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      const id = Number(btn.dataset.id);
+      const result = await Swal.fire({
+
+      title: "¿Eliminar clase?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+
+      reverseButtons: true,
+
+      background: "#1e1e1e",
+      color: "#f5f5f5",
+
+      customClass: {
+        popup: "swal-golahora-popup",
+        title: "swal-golahora-title",
+        htmlContainer: "swal-golahora-text",
+        confirmButton: "swal-golahora-confirm",
+        cancelButton: "swal-golahora-cancel"
+      }
+
+    });
+
+      if (!result.isConfirmed) return;
+
+        await eliminarClase(id);
+      const card = document.querySelector(
+          `.admin-card[data-id="${id}"]`
+        );
+        card.remove();
+
+    });
+
+  });  
+  
+
+  
+    }
+
+
   if(seccionAct =="Entrenamientos")
   {
     const container = document.querySelector("#entrenamientos");
@@ -256,7 +481,72 @@ botones.forEach((boton, index) => {
     const entrenamientos = await getEntrenamientos();
       document.querySelector("#entrenamientos-container").innerHTML =
       RenderAdminEntrenamientoCards(entrenamientos);
+      
+      
+    document.querySelector("#btn-crear-entrenamiento").addEventListener('click',()=>
+    {
+      crearEntrenamiento();
+    })
+  
+      document.querySelectorAll(".admin-btn-delete")
+  .forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      const id = Number(btn.dataset.id);
+      const result = await Swal.fire({
+
+      title: "¿Eliminar entrenamiento?",
+      text: "Esta acción no se puede deshacer",
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+
+      reverseButtons: true,
+
+      background: "#1e1e1e",
+      color: "#f5f5f5",
+
+      customClass: {
+
+        popup: "swal-golahora-popup",
+
+        title: "swal-golahora-title",
+
+        htmlContainer: "swal-golahora-text",
+
+        confirmButton: "swal-golahora-confirm",
+
+        cancelButton: "swal-golahora-cancel"
+
+      }
+
+    });
+
+      if (!result.isConfirmed) return;
+
+
+      const card = document.querySelector(
+        `.admin-card[data-id="${id}"]`
+      );
+        await eliminarEntrenamiento(id);
+
+        card.remove();
+
+    });
+
+  });  
+  
+  
   }
+
+
+
+
+
 
 
   });
