@@ -18,7 +18,7 @@ namespace Application.Interfaces.Clase
         Task<int> ContarCuposLibres(int idActividad, int IdClase);
         Task<List<AsistenciaResponse>> RegistrarAsistencia(int claseId,List<RegistrarAsistenciaRequest> request);
         Task<List<InscripcionResponse>> VerInscriptos(int claseId);
-        
+        Task<List<ClaseResponse>> VerClasesPorProfesorDni(int ProfesorDni);
             
     
     }

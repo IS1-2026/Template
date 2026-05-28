@@ -47,6 +47,14 @@ namespace Template.Controllers
             return Ok(response);
 
         }
+        [HttpGet("clases/{profesorId}")]
+        public async Task<IActionResult> VerClasePorProfesor(int profesorId)
+        {
+
+            var response = await _service.VerClasesPorProfesorDni(profesorId);
+            return Ok(response);
+
+        }
 
         [HttpGet]
         public async Task<IActionResult> ListarClases()

@@ -39,8 +39,11 @@ namespace Application.UseCases
             {
                 throw new ExceptionBadRequest("Ingrese un precio válido");
             }
+            if (request.Fecha == DateOnly.FromDateTime(DateTime.Now))
+            {
+                throw new ExceptionBadRequest("Ingrese una fecha valida");
+            }
 
-            
 
             var entrenamiento = await _entrenamientoQuery
                 .ConsultarEntrenamiento(entrenamientoId);
@@ -60,6 +63,8 @@ namespace Application.UseCases
             entrenamiento.Precio = (int)request.Precio;
             entrenamiento.DniEntrenador = (int)request.Dni_Entrenador;
             entrenamiento.Entrenador = entrenador;
+            entrenamiento.Fecha = request.Fecha ?? entrenamiento.Fecha;
+            entrenamiento.Horario = request.Horario ?? entrenamiento.Horario;
 
             var entrenamientoActualizado = await _entrenamientoCommand.ModificarEntrenamiento(entrenamiento);
 
@@ -68,6 +73,8 @@ namespace Application.UseCases
                 Nombre = entrenamiento.Nombre,
                 Id_Entrenamiento = entrenamientoActualizado.IdEntrenamiento,
                 Dni_Entrenador = entrenamientoActualizado.DniEntrenador,
+                Fecha = entrenamientoActualizado.Fecha,
+                Horario = entrenamientoActualizado.Horario,
                 Cupo = entrenamientoActualizado.Cupo,
                 Precio = entrenamientoActualizado.Precio
             };
@@ -91,9 +98,12 @@ namespace Application.UseCases
             return new EntrenamientoResponse
             {
                 Nombre=Entrenamiento.Nombre,
-               Id_Entrenamiento = Entrenamiento.IdEntrenamiento,
-               Dni_Entrenador = Entrenamiento.DniEntrenador,
-               Precio = Entrenamiento.Precio
+                Id_Entrenamiento = Entrenamiento.IdEntrenamiento,
+                Dni_Entrenador = Entrenamiento.DniEntrenador,
+                Fecha = Entrenamiento.Fecha,
+                Horario = Entrenamiento.Horario,
+                Precio = Entrenamiento.Precio,
+                Cupo=Entrenamiento.Cupo,
             };
         }
         public async Task<EntrenamientoResponse> ProgramarEntrenamiento(ProgramarEntrenamientoRequest request)
@@ -126,6 +136,8 @@ namespace Application.UseCases
             {
                 Nombre = request.Nombre,
                 DniEntrenador = request.Dni_Entrenador,
+                Fecha = request.Fecha,
+                Horario=request.Horario,                
                 Cupo= request.Cupo,
                 Precio = request.Precio,
                 IdActividad=1,
@@ -136,11 +148,13 @@ namespace Application.UseCases
 
             return new EntrenamientoResponse
             {
-                Nombre=EntrenamientoProgramada.Nombre,
-               Id_Entrenamiento = EntrenamientoProgramada.IdEntrenamiento,
-               Dni_Entrenador = EntrenamientoProgramada.DniEntrenador,
-               Cupo = EntrenamientoProgramada.Cupo,               
-               Precio = EntrenamientoProgramada.Precio
+                Nombre = EntrenamientoProgramada.Nombre,
+                Id_Entrenamiento = EntrenamientoProgramada.IdEntrenamiento,
+                Dni_Entrenador = EntrenamientoProgramada.DniEntrenador,
+                Fecha = EntrenamientoProgramada.Fecha,
+                Horario = EntrenamientoProgramada.Horario,
+                Cupo = EntrenamientoProgramada.Cupo,               
+                Precio = EntrenamientoProgramada.Precio
             };
 
         }
@@ -160,9 +174,11 @@ namespace Application.UseCases
 
             return new EntrenamientoResponse
             {
-                Nombre=entrenamiento.Nombre,    
+               Nombre=entrenamiento.Nombre,    
                Id_Entrenamiento = entrenamiento.IdEntrenamiento,//sobreescribo
                Dni_Entrenador = entrenamiento.DniEntrenador,
+               Horario=entrenamiento.Horario,
+               Fecha = entrenamiento.Fecha,
                Cupo= entrenamiento.Cupo,
                Precio = entrenamiento.Precio
             };
@@ -190,6 +206,8 @@ namespace Application.UseCases
                 Cupo=entrenamiento.Cupo,
                 Id_Entrenamiento=EntrenamientoEliminada.IdEntrenamiento,
                 Dni_Entrenador = EntrenamientoEliminada.DniEntrenador,
+                Fecha=entrenamiento.Fecha,
+                Horario=entrenamiento.Horario,
                 Precio=EntrenamientoEliminada.Precio
 
             };
@@ -215,6 +233,8 @@ namespace Application.UseCases
                 Certificado=entrenamiento.Entrenador.Certificado,
                 EstaCertificado=entrenamiento.Entrenador.EstaCertificado
                },
+               Horario= entrenamiento.Horario,
+               Fecha= entrenamiento.Fecha,
                Cupo=entrenamiento.Cupo,
                Precio=entrenamiento.Precio,
 
@@ -232,10 +252,14 @@ namespace Application.UseCases
                 Nombre = entrenamiento.Nombre,
                 Id_Entrenamiento = entrenamiento.IdEntrenamiento,
                 Dni_Entrenador = entrenamiento.DniEntrenador,
+                Fecha=entrenamiento.Fecha,
+                Horario=entrenamiento.Horario,
                 Cupo = entrenamiento.Cupo,
                 Precio = entrenamiento.Precio
             }).ToList();
 
         }
+
+        
     }
 }

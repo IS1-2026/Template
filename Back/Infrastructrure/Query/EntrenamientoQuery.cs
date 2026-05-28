@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 
 namespace Infrastructure.Query
@@ -34,7 +35,9 @@ namespace Infrastructure.Query
 
         public async Task<List<Entrenamiento>> ListarEntrenamientosPorEntrenador(int entrenadorDni, CancellationToken ct = default)
         {
-            return await _context.Entrenamientos.Where(entrenamiento => entrenamiento.DniEntrenador == entrenadorDni).ToListAsync(ct);
+            return await _context.Entrenamientos.Include(e=>e.Entrenador).Where(entrenamiento => entrenamiento.DniEntrenador == entrenadorDni).ToListAsync(ct);
         }
+
+        
     }
 }

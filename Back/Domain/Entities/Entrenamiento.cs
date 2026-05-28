@@ -6,6 +6,8 @@
         public int IdEntrenamiento { get; set; }
         public IEnumerable<Inscripcion>Inscriptos { get; set; }
         public int DniEntrenador { get; set; }
+        public DateOnly Fecha { get; set; }
+        public TimeSpan Horario { get; set; }
         public double Precio { get; set; }
         public int Cupo { get; set; }
         public int IdActividad { get; set; }

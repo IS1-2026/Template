@@ -32,5 +32,10 @@ namespace Infrastructure.Query
         {
             return await _context.Clases.Include(c=>c.Profesor).ToListAsync(ct);
         }
+
+        public async Task<List<Clase>> VerClasesPorProfesor(int profesorDni, CancellationToken ct = default)
+        {
+            return await _context.Clases.Include(c => c.Profesor).Where(c => c.DniProfesor == profesorDni).ToListAsync(ct);
+        }
     }
 }

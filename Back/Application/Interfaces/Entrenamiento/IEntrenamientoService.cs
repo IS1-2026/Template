@@ -17,5 +17,7 @@ namespace Application.Interfaces.Entrenamiento
         Task<List<EntrenamientoFullResponse>> ListarEntrenamientos();
         Task<List<EntrenamientoResponse>> ListarEntrenamientosPorDni(int entrenadorDni);
 
+      
+
     }
 }

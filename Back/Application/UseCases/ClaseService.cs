@@ -349,5 +349,21 @@ namespace Application.UseCases
                 IdDescuento = inscripto.IdDescuento
             }).ToList();
         }
+
+        public async Task<List<ClaseResponse>> VerClasesPorProfesorDni(int ProfesorDni)
+        {
+            var profesor = await _profesionalQuery.ObtenerProfesorPorId(ProfesorDni) ?? throw new ExceptionNotFound("El profesor buscado no fue encontrado");
+            var clases = await _claseQuery.VerClasesPorProfesor(ProfesorDni);
+            return clases.Select(c => new ClaseResponse 
+            {
+               Nombre = c.Nombre,
+               IdClase = c.IdClase,
+               Fecha = c.Dia,
+               Hora = c.Horario,
+               Cupo = c.Cupo,          
+               Precio = c.Precio,
+               DniProfesor=c.Profesor.Dni,
+            }).ToList();
+        }
     }
 }

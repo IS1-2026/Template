@@ -59,7 +59,7 @@ namespace Template.Controllers
             return Ok(response);
         }
         
-        [HttpGet("entrenador/{Entrenadordni}")]
+        [HttpGet("entrenamientos/{Entrenadordni}")]
         public async Task<IActionResult> ListarEntrenamientosPorEntrenador(int Entrenadordni)
         {
             var response = await _service.ListarEntrenamientosPorDni(Entrenadordni);
