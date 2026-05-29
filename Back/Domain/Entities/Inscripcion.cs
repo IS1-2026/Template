@@ -15,6 +15,7 @@ namespace Domain.Entities
         //Relaciones
         public Cliente cliente { get; set; }
         public Clase? clase { get; set; }
+        public Cobro Cobro { get; set; }
         public Entrenamiento? entrenamiento { get; set; }
         public Competencia? competencia { get; set; }
        

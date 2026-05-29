@@ -22,6 +22,7 @@ namespace Domain.Entities
         public Cliente Cliente { get; set; }
         public Cancha Cancha { get; set; }
         public HorarioCancha HorarioCancha { get; set; }
+        public Cobro Cobro { get; set; }
 
     }
 }

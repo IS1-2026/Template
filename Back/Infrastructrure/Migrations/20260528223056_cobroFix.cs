@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class cobroFix : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -337,7 +337,10 @@ namespace Infrastructure.Migrations
                 {
                     IdEntrenamiento = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DniEntrenador = table.Column<int>(type: "int", nullable: false),
+                    Fecha = table.Column<DateOnly>(type: "date", nullable: false),
+                    Horario = table.Column<TimeSpan>(type: "time", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     Cupo = table.Column<int>(type: "int", nullable: false),
                     IdActividad = table.Column<int>(type: "int", nullable: false),
@@ -365,7 +368,10 @@ namespace Infrastructure.Migrations
                 {
                     IdClase = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Cupo = table.Column<int>(type: "int", nullable: false),
+                    Dia = table.Column<DateOnly>(type: "date", nullable: false),
+                    Horario = table.Column<TimeSpan>(type: "time", nullable: false),
                     DniProfesor = table.Column<int>(type: "int", nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     IdActividad = table.Column<int>(type: "int", nullable: false)
@@ -388,12 +394,22 @@ namespace Infrastructure.Migrations
                     IdCobro = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdReserva = table.Column<int>(type: "int", nullable: false),
+                    DniCliente = table.Column<int>(type: "int", nullable: false),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Apellido = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Motivo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EstaCompleto = table.Column<bool>(type: "bit", nullable: false),
                     MontoTotal = table.Column<decimal>(type: "decimal(10,2)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cobro", x => x.IdCobro);
+                    table.ForeignKey(
+                        name: "FK_Cobro_Clientes_DniCliente",
+                        column: x => x.DniCliente,
+                        principalTable: "Clientes",
+                        principalColumn: "Dni",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Cobro_Reserva_IdReserva",
                         column: x => x.IdReserva,
@@ -413,22 +429,14 @@ namespace Infrastructure.Migrations
                     PrecioInscr = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
                     NroAct = table.Column<int>(type: "int", nullable: false),
                     IdAct = table.Column<int>(type: "int", nullable: false),
-                    IdCancha = table.Column<int>(type: "int", nullable: false),
                     IdDescuento = table.Column<int>(type: "int", nullable: false),
                     claseIdClase = table.Column<int>(type: "int", nullable: true),
                     entrenamientoIdEntrenamiento = table.Column<int>(type: "int", nullable: true),
-                    competenciaIdCompetencia = table.Column<int>(type: "int", nullable: true),
-                    profesorDni = table.Column<int>(type: "int", nullable: false)
+                    competenciaIdCompetencia = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Inscripcion", x => x.IdInscripcion);
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Cancha_IdCancha",
-                        column: x => x.IdCancha,
-                        principalTable: "Cancha",
-                        principalColumn: "IdCancha",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Inscripcion_Clase_claseIdClase",
                         column: x => x.claseIdClase,
@@ -450,12 +458,6 @@ namespace Infrastructure.Migrations
                         column: x => x.entrenamientoIdEntrenamiento,
                         principalTable: "Entrenamiento",
                         principalColumn: "IdEntrenamiento");
-                    table.ForeignKey(
-                        name: "FK_Inscripcion_Profesores_profesorDni",
-                        column: x => x.profesorDni,
-                        principalTable: "Profesores",
-                        principalColumn: "Dni",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -495,6 +497,11 @@ namespace Infrastructure.Migrations
                 name: "IX_Clase_DniProfesor",
                 table: "Clase",
                 column: "DniProfesor");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cobro_DniCliente",
+                table: "Cobro",
+                column: "DniCliente");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cobro_IdReserva",
@@ -540,16 +547,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Inscripcion_entrenamientoIdEntrenamiento",
                 table: "Inscripcion",
                 column: "entrenamientoIdEntrenamiento");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Inscripcion_IdCancha",
-                table: "Inscripcion",
-                column: "IdCancha");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Inscripcion_profesorDni",
-                table: "Inscripcion",
-                column: "profesorDni");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Partido_EquipoIdEquipo",

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260527055945_claseFix")]
-    partial class claseFix
+    [Migration("20260528223056_cobroFix")]
+    partial class cobroFix
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,8 +84,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Cupo")
                         .HasColumnType("int");
 
+                    b.Property<DateOnly>("Dia")
+                        .HasColumnType("date");
+
                     b.Property<int>("DniProfesor")
                         .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Horario")
+                        .HasColumnType("time");
 
                     b.Property<int>("IdActividad")
                         .HasColumnType("int");
@@ -112,6 +118,13 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCobro"));
 
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DniCliente")
+                        .HasColumnType("int");
+
                     b.Property<bool>("EstaCompleto")
                         .HasColumnType("bit");
 
@@ -121,7 +134,17 @@ namespace Infrastructure.Migrations
                     b.Property<decimal>("MontoTotal")
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("IdCobro");
+
+                    b.HasIndex("DniCliente");
 
                     b.HasIndex("IdReserva");
 
@@ -210,8 +233,18 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("EntrenadorDni")
                         .HasColumnType("int");
 
+                    b.Property<DateOnly>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<TimeSpan>("Horario")
+                        .HasColumnType("time");
+
                     b.Property<int>("IdActividad")
                         .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(10,2)");
@@ -637,11 +670,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Cobro", b =>
                 {
+                    b.HasOne("Domain.Entities.Cliente", "Cliente")
+                        .WithMany("Cobros")
+                        .HasForeignKey("DniCliente")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Reserva", "Reserva")
                         .WithMany()
                         .HasForeignKey("IdReserva")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Cliente");
 
                     b.Navigation("Reserva");
                 });
@@ -843,6 +884,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Cliente", b =>
                 {
+                    b.Navigation("Cobros");
+
                     b.Navigation("Inscripciones");
 
                     b.Navigation("Reservas");

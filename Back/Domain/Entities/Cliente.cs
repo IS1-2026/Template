@@ -1,5 +1,4 @@
 ﻿
-using System.Collections;
 
 namespace Domain.Entities
 {
@@ -7,6 +6,7 @@ namespace Domain.Entities
     {
         public IEnumerable<Reserva> Reservas {  get; set; }
         public IEnumerable<Inscripcion> Inscripciones { get; set; }
+        public IEnumerable<Cobro> Cobros { get; set; }
         public bool EsSocio {  get; set; }
     }
 }
