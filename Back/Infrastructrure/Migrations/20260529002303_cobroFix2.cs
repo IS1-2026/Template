@@ -5,14 +5,14 @@
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class fixEntrenamiento : Migration
+    public partial class cobroFix2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Nombre",
-                table: "Entrenamiento",
+                name: "MetodoPago",
+                table: "Cobro",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
@@ -22,8 +22,8 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Nombre",
-                table: "Entrenamiento");
+                name: "MetodoPago",
+                table: "Cobro");
         }
     }
 }

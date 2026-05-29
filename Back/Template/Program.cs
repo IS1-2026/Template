@@ -22,6 +22,7 @@ using Infrastructure.Persistence;
 using Infrastructure.Query;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces.Cobro;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +94,11 @@ builder.Services.AddScoped<IReporteQuery, ReporteQuery>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IClienteCommand, ClienteCommand>();
 builder.Services.AddScoped<IClienteQuery, ClienteQuery>();
+
+//Cobros
+builder.Services.AddScoped<ICobroService, CobroService>();
+builder.Services.AddScoped<ICobroQuery, CobroQuery>();
+builder.Services.AddScoped<ICobroCommand, CobroCommand>();
 
 //Competencias
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();

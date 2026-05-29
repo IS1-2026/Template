@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260527061733_fixEntrenamiento")]
-    partial class fixEntrenamiento
+    [Migration("20260529023808_cobroFix3")]
+    partial class cobroFix3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,8 +84,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Cupo")
                         .HasColumnType("int");
 
+                    b.Property<DateOnly>("Dia")
+                        .HasColumnType("date");
+
                     b.Property<int>("DniProfesor")
                         .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Horario")
+                        .HasColumnType("time");
 
                     b.Property<int>("IdActividad")
                         .HasColumnType("int");
@@ -112,18 +118,48 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCobro"));
 
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DniCliente")
+                        .HasColumnType("int");
+
                     b.Property<bool>("EstaCompleto")
                         .HasColumnType("bit");
 
-                    b.Property<int>("IdReserva")
+                    b.Property<int?>("IdInscripcion")
                         .HasColumnType("int");
+
+                    b.Property<int?>("IdReserva")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MetodoPago")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MontoTotal")
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("IdCobro");
 
-                    b.HasIndex("IdReserva");
+                    b.HasIndex("DniCliente");
+
+                    b.HasIndex("IdInscripcion")
+                        .IsUnique()
+                        .HasFilter("[IdInscripcion] IS NOT NULL");
+
+                    b.HasIndex("IdReserva")
+                        .IsUnique()
+                        .HasFilter("[IdReserva] IS NOT NULL");
 
                     b.ToTable("Cobro", (string)null);
                 });
@@ -209,6 +245,12 @@ namespace Infrastructure.Migrations
 
                     b.Property<int?>("EntrenadorDni")
                         .HasColumnType("int");
+
+                    b.Property<DateOnly>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<TimeSpan>("Horario")
+                        .HasColumnType("time");
 
                     b.Property<int>("IdActividad")
                         .HasColumnType("int");
@@ -641,11 +683,25 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Cobro", b =>
                 {
-                    b.HasOne("Domain.Entities.Reserva", "Reserva")
-                        .WithMany()
-                        .HasForeignKey("IdReserva")
+                    b.HasOne("Domain.Entities.Cliente", "Cliente")
+                        .WithMany("Cobros")
+                        .HasForeignKey("DniCliente")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Domain.Entities.Inscripcion", "Inscripcion")
+                        .WithOne("Cobro")
+                        .HasForeignKey("Domain.Entities.Cobro", "IdInscripcion")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Reserva", "Reserva")
+                        .WithOne("Cobro")
+                        .HasForeignKey("Domain.Entities.Cobro", "IdReserva")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Cliente");
+
+                    b.Navigation("Inscripcion");
 
                     b.Navigation("Reserva");
                 });
@@ -845,8 +901,22 @@ namespace Infrastructure.Migrations
                     b.Navigation("Partidos");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Inscripcion", b =>
+                {
+                    b.Navigation("Cobro")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Reserva", b =>
+                {
+                    b.Navigation("Cobro")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.Cliente", b =>
                 {
+                    b.Navigation("Cobros");
+
                     b.Navigation("Inscripciones");
 
                     b.Navigation("Reservas");

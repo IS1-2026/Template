@@ -2,7 +2,7 @@ import {postData} from "../../Global/ApiServices.js"
 export async function ProfeLogin() {
     const correo = document.getElementById("email").value;
     const psw = document.getElementById("password").value;
-    const endpointUrl = "Profesor/login"; // Endpoint específico para Profesor
+    const endpointUrl = "Profesionales/login/profesor"; // Endpoint específico para Profesor
 
     const body = { 
         correo: correo,
@@ -45,4 +45,4 @@ export async function ProfeLogin() {
     }
 }
 // Vinculación global para el HTML
-window.ProfesorLogin = ProfesorLogin;
+window.ProfeLogin=ProfeLogin;

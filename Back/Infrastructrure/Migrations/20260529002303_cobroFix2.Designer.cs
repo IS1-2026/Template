@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260528195603_fixEntrenamiento2")]
-    partial class fixEntrenamiento2
+    [Migration("20260529002303_cobroFix2")]
+    partial class cobroFix2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -118,16 +118,37 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCobro"));
 
+                    b.Property<string>("Apellido")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DniCliente")
+                        .HasColumnType("int");
+
                     b.Property<bool>("EstaCompleto")
                         .HasColumnType("bit");
 
                     b.Property<int>("IdReserva")
                         .HasColumnType("int");
 
+                    b.Property<string>("MetodoPago")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("MontoTotal")
                         .HasColumnType("decimal(10,2)");
 
+                    b.Property<string>("Motivo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("IdCobro");
+
+                    b.HasIndex("DniCliente");
 
                     b.HasIndex("IdReserva");
 
@@ -653,11 +674,19 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Cobro", b =>
                 {
+                    b.HasOne("Domain.Entities.Cliente", "Cliente")
+                        .WithMany("Cobros")
+                        .HasForeignKey("DniCliente")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Reserva", "Reserva")
                         .WithMany()
                         .HasForeignKey("IdReserva")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Cliente");
 
                     b.Navigation("Reserva");
                 });
@@ -859,6 +888,8 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Cliente", b =>
                 {
+                    b.Navigation("Cobros");
+
                     b.Navigation("Inscripciones");
 
                     b.Navigation("Reservas");

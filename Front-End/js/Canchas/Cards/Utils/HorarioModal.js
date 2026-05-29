@@ -1,5 +1,7 @@
 import { getHorarios } from "./getHorarios.js";
 import { CrearReserva } from "../../../Reserva/PostReserva.js";
+import { CrearModalRegistrarCobro } from "../../../Cobros/cobroModal.js";
+import { crearCobro } from "../../../Cobros/crearCobro.js";
 
 const diasSemana = {
   1: "Lunes",
@@ -12,6 +14,7 @@ const diasSemana = {
 };
 
 function obtenerFechaDeDia(diaSemana) {
+
   const hoy = new Date();
 
   const actual = hoy.getDay();
@@ -23,10 +26,30 @@ function obtenerFechaDeDia(diaSemana) {
   }
 
   const fecha = new Date(hoy);
+
+  fecha.setHours(0, 0, 0, 0);
+
   fecha.setDate(hoy.getDate() + diff);
 
-  return fecha.toISOString().split("T")[0];
+  const year = fecha.getFullYear();
+
+  const month = String(fecha.getMonth() + 1).padStart(2, "0");
+
+  const day = String(fecha.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
+function formatearFechaCompleta(fechaString) {
+
+  const [year, month, day] = fechaString.split("-");
+
+  const fecha = new Date(year, month - 1, day);
+
+  const nombreDia = diasSemana[fecha.getDay()];
+
+  return `${nombreDia} (${day}/${month}/${year})`;
+}
+
 
 export function abrirModal(cancha) {
   const modal = document.querySelector("#modal");
@@ -46,7 +69,7 @@ export function abrirModal(cancha) {
       <div class="dias-container">
         ${diasDisponibles.map(dia => `
           <button class="dia-btn" data-dia="${dia}">
-            ${diasSemana[dia]}
+            ${formatearFechaCompleta(obtenerFechaDeDia(dia))}
           </button>
         `).join("")}
       </div>
@@ -78,8 +101,7 @@ export function abrirModal(cancha) {
 
       const fecha = obtenerFechaDeDia(dia);
       fechaSeleccionadaGlobal = fecha;
-      console.log(fecha)
-
+  
       horariosContainer.innerHTML = "<p>Cargando horarios...</p>";
 
       try {
@@ -117,46 +139,78 @@ export function abrirModal(cancha) {
 
             horariosContainer.appendChild(reservarBtn);
 
-            reservarBtn.addEventListener("click", async () => {
-              try {
-                const dni = Number(localStorage.getItem("dni"));
-                const horarioCanchaId = Number(btnHorario.dataset.id);
-                console.log(fechaSeleccionadaGlobal);
-                await CrearReserva(dni,cancha.idCancha,horarioCanchaId,fechaSeleccionadaGlobal);
+    reservarBtn.addEventListener("click", async () => {
+        const modalExistente = document.querySelector("#registrarCobroModal");
+        if (modalExistente) {
+          modalExistente.remove();
+        }
+        const dni = Number(localStorage.getItem("dni"));
+        const modalCobroHTML = CrearModalRegistrarCobro(cancha.nombre,cancha.tipoCancha.precio,dni);
+        document.body.insertAdjacentHTML("beforeend", modalCobroHTML);
+        const modalCobro = document.querySelector("#registrarCobroModal");
+        modalCobro.classList.add("active");
+        document.body.classList.add("modal-open");
+        // cerrar modal
+        modalCobro.querySelector(".cerrar-modal-cobro").addEventListener("click", () => {
+            modalCobro.remove();
+            document.body.classList.remove("modal-open");
+          });
 
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "success",
-                  title: "Reserva creada correctamente",
-                  timer: 2500,
-                  showConfirmButton: false
-                });
+        const formCobro = modalCobro.querySelector("#formRegistrarCobro");
+        formCobro.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          try {
+            const dni = Number(localStorage.getItem("dni"));
+            const horarioCanchaId = Number(btnHorario.dataset.id);
+            // CREAR RESERVA
+            const reserva = await CrearReserva(dni,cancha.idCancha,horarioCanchaId,fechaSeleccionadaGlobal);
+            const metodoPago = modalCobro.querySelector("#metodoPagoCobro").value
 
-                setTimeout(() => {
-                  window.location.href = "canchas.html";
-                }, 2500);
-
-              } catch (error) {
-                Swal.fire({
-                  toast: true,
-                  position: "bottom-end",
-                  icon: "error",
-                  title: error.message ?? "Error al crear la reserva",
-                  timer: 2500,
-                  showConfirmButton: false
-                });
-              }
+            console.log(reserva);
+            //REGISTRAR COBRO
+            await crearCobro(reserva.reservaId,dni,cancha.tipoCancha.precio,metodoPago,"Reserva")
+            modalCobro.remove();
+            document.body.classList.remove("modal-open");
+            Swal.fire({
+              toast: true,
+              position: "bottom-end",
+              icon: "success",
+              title: "Reserva creada correctamente",
+              timer: 2500,
+              showConfirmButton: false,
+              customClass: {
+              popup: "toast-golahora toast-popup-success",
+              title: "toast-title"
+                }
             });
+            setTimeout(() => {
+              window.location.href = "reservas.html";
+            }, 2500);
+          } catch (error) {
+            Swal.fire({
+              toast: true,
+              position: "bottom-end",
+              icon: "error",
+              title: error.message ?? "Error al crear la reserva",
+              timer: 2500,
+              showConfirmButton: false,
+              customClass: {
+              popup: "toast-golahora toast-popup-error",
+              title: "toast-title"
+            }
+            });
+          }
+        });
+      });
           });
         });
 
-      } catch (error) {
+      }      
+      catch (error) {
         horariosContainer.innerHTML = "<p>Error al cargar horarios</p>";
       }
     });
   });
-
   // cerrar modal
   modal.querySelector(".cerrar-modal").addEventListener("click", () => {
     modal.classList.remove("active");

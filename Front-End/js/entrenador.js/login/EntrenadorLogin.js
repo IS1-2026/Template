@@ -1,21 +1,33 @@
 import {postData} from "../../Global/ApiServices.js"
+
+
 export async function EntreLogin() {
     const correo = document.getElementById("email").value;
     const psw = document.getElementById("password").value;
-    const endpointUrl = "Entrenador/login";
+    const endpointUrl = "Profesionales/login/entrenador";
 
     const body = { correo, password: psw };
 
     try {
         const response = await postData(endpointUrl, body);
 
-        const keysToRemove = ["dni", "nombre", "logged", "Adminlogged", "Profesorlogged", "Entrenadorlogged"];
-        keysToRemove.forEach(key => localStorage.removeItem(key));
+         if(localStorage.getItem("dni"))
+        {
+            localStorage.removeItem("dni")    
+        }
+        if(localStorage.getItem("nombre"))
+        {
+            localStorage.removeItem("nombre")    
+        }
+        if(localStorage.getItem("logged"))
+        {
+            localStorage.removeItem("logged")    
+        }
 
         localStorage.setItem("dni", response.dni);
         localStorage.setItem("nombre", response.nombre);
         localStorage.setItem("Entrenadorlogged", "true"); 
-        localStorage.setItem("logged", "true"); 
+        
 
         Swal.fire({
             toast: true,
@@ -57,4 +69,4 @@ function showLoginError(error) {
 }
 
 // Vinculación global idéntica al onclick del HTML
-window.EntrenadorLogin = EntrenadorLogin;
+window.EntreLogin=EntreLogin;
