@@ -168,7 +168,7 @@ export function abrirModal(cancha) {
 
             console.log(reserva);
             //REGISTRAR COBRO
-            await crearCobro(reserva.reservaId,dni,cancha.tipoCancha.precio,metodoPago,"Reserva")
+            await crearCobro(reserva.reservaId,null,dni,cancha.tipoCancha.precio,metodoPago,"Reserva")
             modalCobro.remove();
             document.body.classList.remove("modal-open");
             Swal.fire({
@@ -181,7 +181,7 @@ export function abrirModal(cancha) {
               customClass: {
               popup: "toast-golahora toast-popup-success",
               title: "toast-title"
-                }
+            }
             });
             setTimeout(() => {
               window.location.href = "reservas.html";

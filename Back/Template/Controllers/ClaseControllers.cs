@@ -47,7 +47,7 @@ namespace Template.Controllers
             return Ok(response);
 
         }
-        [HttpGet("clases/{profesorId}")]
+        [HttpGet("clases/{profesorDni}")]
         public async Task<IActionResult> VerClasePorProfesor(int profesorId)
         {
 

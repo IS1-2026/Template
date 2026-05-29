@@ -63,8 +63,8 @@ namespace Application.UseCases
             return new CobroResponse
             {
                 Id_Cobro = cobroRegistrado.IdCobro, 
-                Id_Reserva = (int)cobroRegistrado.IdReserva,   
-                IdInscripcion= (int)cobroRegistrado.IdInscripcion,
+                Id_Reserva = cobroRegistrado.IdReserva,   
+                IdInscripcion= cobroRegistrado.IdInscripcion,
                 clienteDni=cobroRegistrado.DniCliente,
                 metodoPago=cobroRegistrado.MetodoPago,
                 EstaCompleto = cobroRegistrado.EstaCompleto,

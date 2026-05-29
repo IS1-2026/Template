@@ -15,7 +15,7 @@ namespace Template.Controllers
             _service = service;
         }
 
-        [HttpPost("clase/{id}")]
+        [HttpPost("clase/{claseId}")]
         public async Task<IActionResult> RegistrarAsistencia([FromRoute]int claseId, [FromBody] RegistrarAsistenciaRequest request)
         {
             var response = await _service.RegistrarAsistencia(claseId,request); 

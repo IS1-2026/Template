@@ -3,6 +3,8 @@ import { getEntrenamientos } from "../GetEntrenamientos.js"
 import { RenderCardsClases } from "../Cards/Clases/RenderClasesCards.js";
 import { RenderCardsEntrenamientos } from "../Cards/Entrenamientos/RenderEntrenamientosCards.js";
 import { RealizarInscripcion } from "../../Inscripciones/crearInscripcion.js";
+import { CrearModalRegistrarCobro } from "../../Cobros/cobroModal.js";
+import {crearCobro} from "../../Cobros/crearCobro.js"
 
 export async function CreateAllActivitiesCards(containerId = "activities-container") {
 
@@ -43,30 +45,113 @@ export async function CreateAllActivitiesCards(containerId = "activities-contain
       ${entrenamientosHTML}
     `;
 
-    document.addEventListener("click",async (e) => {
-      const dni = Number(localStorage.getItem("dni"));
-      
-      const btnClase = e.target.closest(".btn-inscribirse");
-      if (btnClase) {
-        const id = Number(btnClase.dataset.id);
-        const clase = clases.find(c => c.idClase === id);
-        await RealizarInscripcion(dni,id,2);
-      }
+    document.addEventListener("click", async (e) => {
 
-      const btnEntrenamiento = e.target.closest(".btn-inscribirse-entrenamiento");
-      if (btnEntrenamiento) {
-        const id = Number(btnEntrenamiento.dataset.id);
-        const ent = entrenamientos.find(x => x.id_Entrenamiento === id);
-        await RealizarInscripcion(dni,id,1);
-      
+  const dni = Number(localStorage.getItem("dni"));
+
+  // ================= CLASE =================
+  const btnClase = e.target.closest(".btn-inscribirse");
+
+  if (btnClase) {
+
+    const id = Number(btnClase.dataset.id);
+    const clase = clases.find(c => c.idClase === id);
+
+    try {
+
+      const inscripcion = await RealizarInscripcion(dni, id, 2);
+
+      const modalExistente = document.querySelector("#registrarCobroModal");
+      if (modalExistente) modalExistente.remove();
+
+      const modalHTML = CrearModalRegistrarCobro(
+        "Inscripción a Clase",
+        clase.precio,
+        dni
+      );
+
+      document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+      const modal = document.querySelector("#registrarCobroModal");
+
+      modal.querySelector(".cerrar-modal-cobro").addEventListener("click", () => {
+        modal.remove();
+      });
+
+      modal.querySelector("#formRegistrarCobro").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const metodoPago = modal.querySelector("#metodoPagoCobro").value;
+
+        await crearCobro(
+          null,
+          inscripcion.idInscripcion,
+          dni,
+          clase.precio,
+          metodoPago,
+          "Inscripción Clase"
+        );
+
+        modal.remove();
+      });
+
+    } catch (err) {
+      console.error(err);
     }
-      
-      
+  }
 
-      
+  // ================= ENTRENAMIENTO =================
+  const btnEntrenamiento = e.target.closest(".btn-inscribirse-entrenamiento");
 
-    });
+  if (btnEntrenamiento) {
 
+    const id = Number(btnEntrenamiento.dataset.id);
+    const ent = entrenamientos.find(x => x.id_Entrenamiento === id);
+
+    try {
+
+      const inscripcion = await RealizarInscripcion(dni, id, 1);
+
+      const modalExistente = document.querySelector("#registrarCobroModal");
+      if (modalExistente) modalExistente.remove();
+
+      const modalHTML = CrearModalRegistrarCobro(
+        "Inscripción a Entrenamiento",
+        ent.precio,
+        dni
+      );
+
+      document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+      const modal = document.querySelector("#registrarCobroModal");
+
+      modal.querySelector(".cerrar-modal-cobro").addEventListener("click", () => {
+        modal.remove();
+      });
+
+      modal.querySelector("#formRegistrarCobro").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const metodoPago = modal.querySelector("#metodoPagoCobro").value;
+
+        await crearCobro(
+          null,
+          inscripcion.idInscripcion,
+          dni,
+          ent.precio,
+          metodoPago,
+          "Inscripción Entrenamiento"
+        );
+
+        modal.remove();
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+});
   } catch (err) {
     console.error(err);
     container.innerHTML = `
