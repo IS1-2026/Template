@@ -141,6 +141,10 @@ builder.Services.AddScoped<IClaseCommand, ClaseCommand>();
 builder.Services.AddScoped<IInscripcionService, InscripcionService>();
 builder.Services.AddScoped<IInscripcionQuery, InscripcionQuery>();
 builder.Services.AddScoped<IInscripcionCommand, InscripcionCommand>();
+//Descuento
+builder.Services.AddScoped<IDescuentoCommand, DescuentoCommand>();
+builder.Services.AddScoped<IDescuentoQuery, DescuentoQuery>();
+builder.Services.AddScoped<IDescuentoService, DescuentoService>();
 
 //CORS
 builder.Services.AddCors(option =>
