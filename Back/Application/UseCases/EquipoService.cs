@@ -19,7 +19,7 @@ namespace Application.UseCases
             _equipoCommand = equipoCommand;
             _equipoQuery = equipoQuery;
         }
-        public async Task<int> CrearEquipo(AgregarEquipoRequest request, CancellationToken ct = default)
+        public async Task<int> CrearEquipo(CrearEquipoRequest request, CancellationToken ct = default)
         {
             var equipo = new Equipo
             {

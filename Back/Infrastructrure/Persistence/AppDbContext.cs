@@ -269,42 +269,51 @@ namespace Infrastructure.Persistence
                 entity.Property(e => e.Nombre)
                     .HasMaxLength(30)
                     .IsRequired();
+                entity.HasOne(e => e.Competencia)
+                .WithMany(c => c.Equipos)
+                .HasForeignKey(e => e.IdCompetencia);
             });
 
             // PARTIDO
 
-            modelBuilder.Entity<Partido>(entity =>
-            {
-                entity.ToTable("Partido");
+            modelBuilder.Entity<Partido>(entity => { entity.ToTable("Partido");
 
                 entity.HasKey(p => p.IdPartido);
 
                 entity.Property(p => p.IdPartido)
-                    .ValueGeneratedOnAdd();
+                .ValueGeneratedOnAdd();
 
-                entity.Property(p => p.Resultado)
-                    .HasMaxLength(20);
+                entity.Property(p => p.GolesLocal).
+                HasColumnType("int");
+
+                entity.Property(p => p.GolesVis).
+                HasColumnType("int");
+
+                entity.Property(p => p.Estado)
+                .HasMaxLength(30);
 
                 entity.Property(p => p.HoraInicio)
-                    .HasColumnType("datetime");
+                .HasColumnType("datetime");
 
                 entity.Property(p => p.HoraFin)
-                    .HasColumnType("datetime");
+                .HasColumnType("datetime");
 
                 entity.HasOne(p => p.EquipoLocal)
-                    .WithMany()
-                    .HasForeignKey(p => p.IdEquipoLocal)
-                    .OnDelete(DeleteBehavior.Restrict);
+                .WithMany().HasForeignKey(p => p.IdEquipoLocal)
+                .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(p => p.EquipoVis)
-                    .WithMany()
-                    .HasForeignKey(p => p.IdEquipoVis)
-                    .OnDelete(DeleteBehavior.Restrict);
+                .WithMany().HasForeignKey(p => p.IdEquipoVis)
+                .OnDelete(DeleteBehavior.Restrict);
 
                 entity.HasOne(p => p.Competencia)
-                    .WithMany(c=>c.Partidos)
-                    .HasForeignKey(p => p.IdCompetencia)
-                    .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(c => c.Partidos).HasForeignKey(p => p.IdCompetencia)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(p => p.SigPartido)
+                .WithMany()
+                .HasForeignKey(p => p.IdSigPartido)
+                .OnDelete(DeleteBehavior.Restrict);
             });
 
             // RESERVA

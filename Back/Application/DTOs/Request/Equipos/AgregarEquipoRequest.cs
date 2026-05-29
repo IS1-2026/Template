@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Application.DTOs.Request.Equipos
 {
 
-    public class AgregarEquipoRequest
+    public class CrearEquipoRequest
     {
             public string nombre { get; set; }
     }

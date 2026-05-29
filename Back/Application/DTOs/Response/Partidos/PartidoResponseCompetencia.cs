@@ -10,7 +10,8 @@ namespace Application.DTOs.Response.Competencias;
 
 public class PartidoResponseCompetencia
 {
-    public string resultado { get; set; }
+    public int? GolesLocal { get; set; }
+    public int? GolesVis { get; set; }
     public DateTime horaInicio { get; set; }
     public DateTime horaFin { get; set; }
     public string EquipoLocal { get; set; }

@@ -105,6 +105,11 @@ builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 builder.Services.AddScoped<ICompetenciaCommand, CompetenciaCommand>();
 builder.Services.AddScoped<ICompetenciaQuery, CompetenciaQuery>();
 
+//Ligas
+builder.Services.AddScoped<ILigaService, LigaService>();
+
+//Torneos
+builder.Services.AddScoped<ITorneoService, TorneoService>();
 //Equipos
 builder.Services.AddScoped<IEquipoService, EquipoService>();
 builder.Services.AddScoped<IEquipoCommand, EquipoCommand>();

@@ -82,13 +82,14 @@ public class PartidoService : IPartidoService
         {
             throw new ArgumentException("La competencia no existe.");
         }
-        partidoExistente.IdPartido = request.idPartido;
-        partidoExistente.IdCompetencia = request.idCompetencia;
-        partidoExistente.IdEquipoLocal = request.idEquipoLocal;
-        partidoExistente.IdEquipoVis = request.idEquipoVis;
-        partidoExistente.Resultado = request.resultado ?? partidoExistente.Resultado;
-        partidoExistente.HoraInicio = request.horarioinicio;
-        partidoExistente.HoraFin = request.horariofin;
+            partidoExistente.IdPartido = request.idPartido;
+            partidoExistente.IdCompetencia = request.idCompetencia;
+            partidoExistente.IdEquipoLocal = request.idEquipoLocal;
+            partidoExistente.GolesLocal= request.GolesLocal;
+            partidoExistente.GolesVis = request.GolesVis;
+            partidoExistente.IdEquipoVis = request.idEquipoVis;
+            partidoExistente.HoraInicio = request.horarioinicio;
+            partidoExistente.HoraFin = request.horariofin;
 
         await _IPartidoCommand.ModificarPartido(partidoExistente, ct);
     }
@@ -114,7 +115,8 @@ public class PartidoService : IPartidoService
             IdCompetencia = partido.IdCompetencia,
             IdEquipoLocal = partido.IdEquipoLocal,
             IdEquipoVis = partido.IdEquipoVis,
-            Resultado = partido.Resultado,
+            GolesLocal = partido.GolesLocal,
+            GolesVis = partido.GolesVis,
             HoraInicio = partido.HoraInicio,
             HoraFin = partido.HoraFin
         };
@@ -133,7 +135,8 @@ public class PartidoService : IPartidoService
             IdCompetencia = partido.IdCompetencia,
             IdEquipoLocal = partido.IdEquipoLocal,
             IdEquipoVis = partido.IdEquipoVis,
-            Resultado = partido.Resultado,
+            GolesLocal = partido.GolesLocal,
+            GolesVis = partido.GolesVis,
             HoraInicio = partido.HoraInicio,
             HoraFin = partido.HoraFin
         });

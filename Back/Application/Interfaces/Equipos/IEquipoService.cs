@@ -9,7 +9,7 @@ namespace Application.Interfaces.Equipos
 {
     public interface IEquipoService
     {
-        Task<int> CrearEquipo(AgregarEquipoRequest request, CancellationToken ct = default);
+        Task<int> CrearEquipo(CrearEquipoRequest request, CancellationToken ct = default);
         Task ModificarEquipo(ModificarEquipoRequest request, CancellationToken ct = default);
         Task EliminarEquipo(int idEquipo, CancellationToken ct = default);
         Task<EquipoResponse> ObtenerEquipoPorId(int id, CancellationToken ct = default);

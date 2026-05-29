@@ -10,8 +10,8 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Command
-{ 
-    public class CompetenciaCommand: ICompetenciaCommand
+{
+    public class CompetenciaCommand : ICompetenciaCommand
     {
         private readonly AppDbContext _context;
 
@@ -49,13 +49,20 @@ namespace Infrastructure.Command
             await _context.SaveChangesAsync(ct);
             return equipo.IdEquipo;
         }
-
-        public async Task<int> DecrementarCupo(int competenciaId, CancellationToken ct = default)
+        public async Task AgregarPartidos(List<Partido> fixture, CancellationToken ct = default)
         {
-            var competencia = await _context.Competencias.FirstOrDefaultAsync(c => c.IdCompetencia == competenciaId, ct);
-            competencia.Cupos--;
+            await _context.Partidos.AddRangeAsync(fixture, ct);
             await _context.SaveChangesAsync(ct);
-            return competencia.Cupos;
+        }
+        public async Task DecrementarCupo(int idCompetencia, CancellationToken ct = default)
+        {
+            var competencia = await _context.Competencias
+                .FirstOrDefaultAsync(c => c.IdCompetencia == idCompetencia, ct);
+            if (competencia is null)
+                throw new ExceptionNotFound("Competencia no encontrada");
+            competencia.Cupos--;
+            _context.Competencias.Update(competencia);
+            await _context.SaveChangesAsync(ct);
         }
     }
 }

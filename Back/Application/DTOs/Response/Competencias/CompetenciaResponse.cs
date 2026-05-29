@@ -1,15 +1,23 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Domain.Entities;
+using Application.DTOs.Response.Equipos;
+using Application.DTOs.Response.Partidos;
+
 
 namespace Application.DTOs.Response.Competencias
 {
 
     public class CompetenciaResponse
     {
-        public int CompetenciaId { get; set; }
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public int Cupos { get; set; }
         public double Precio { get; set; }
-        public string Tipo { get; set; }
+        public ICollection<EquipoResponse> Equipos { get; set; }
+        public ICollection<PartidoResponse> Partidos { get; set; }
     }
 }
